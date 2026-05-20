@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magyar–Angol Kvíz 🏙️</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --blue:#3a86ff;--blue2:#2667cc;--purple:#7b5ea7;--pink:#ff6b9d;
+  --yellow:#ffd60a;--green:#06d6a0;--green2:#05a880;--red:#ef476f;
+  --red2:#c03057;--orange:#ff9f1c;--white:#ffffff;--ink:#1a1040;--muted:#7a6f9a;
+}
+@keyframes pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes starfly{0%{transform:scale(0) rotate(0deg);opacity:1}100%{transform:scale(1.8) rotate(60deg);opacity:0}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+
+html,body{min-height:100%;font-family:'Segoe UI',system-ui,sans-serif;}
+body{
+  background:linear-gradient(135deg,#d7eaff 0%,#e4d4ff 50%,#fff4d4 100%);
+  min-height:100vh;padding:1rem;
+  display:flex;flex-direction:column;align-items:center;
+}
+.stars-wrap{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:999;}
+.star-p{position:absolute;font-size:24px;animation:starfly 1s ease-out forwards;}
+.top-bar{width:100%;max-width:480px;padding:.5rem 0 1.25rem;text-align:center;}
+.top-bar span{font-size:14px;font-weight:700;color:var(--purple);letter-spacing:.06em;}
+.screen{display:none;width:100%;max-width:480px;}
+.screen.active{display:block;animation:fadeUp .3s ease;}
+
+/* START */
+.start-hero{background:#fff;border-radius:28px;box-shadow:0 8px 40px rgba(100,60,200,.15);padding:2.5rem 2rem 2rem;text-align:center;}
+.hero-icon{font-size:72px;display:block;animation:bounce 2.2s infinite;margin-bottom:.75rem;}
+.hero-title{font-size:28px;font-weight:900;color:var(--ink);margin-bottom:.5rem;line-height:1.2;}
+.hero-sub{font-size:15px;color:var(--muted);margin-bottom:1.5rem;line-height:1.6;}
+.badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(90deg,var(--orange),var(--pink));color:#fff;border-radius:99px;padding:7px 20px;font-size:14px;font-weight:700;margin-bottom:1.75rem;}
+.btn-start{display:block;width:100%;background:linear-gradient(135deg,var(--orange),var(--pink));color:#fff;border:none;border-radius:18px;padding:17px;font-size:19px;font-weight:900;cursor:pointer;box-shadow:0 4px 22px rgba(255,107,157,.35);transition:transform .15s,box-shadow .15s;}
+.btn-start:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,107,157,.4);}
+.btn-start:active{transform:scale(.97);}
+
+/* PROGRESS */
+.prog-wrap{margin-bottom:1rem;}
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.prog-track{flex:1;height:14px;background:rgba(255,255,255,.65);border-radius:99px;overflow:hidden;box-shadow:inset 0 2px 5px rgba(0,0,0,.1);}
+.prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--orange),var(--pink));transition:width .5s cubic-bezier(.4,0,.2,1);}
+.prog-lbl{font-size:14px;font-weight:800;color:var(--purple);min-width:44px;text-align:right;}
+.mini-scores{display:flex;gap:8px;}
+.chip{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:6px 15px;font-size:14px;font-weight:800;}
+.chip-g{background:#d1faf0;color:var(--green2);}
+.chip-r{background:#ffe4ec;color:var(--red2);}
+
+/* QUESTION CARD */
+.q-card{background:#fff;border-radius:28px;box-shadow:0 8px 40px rgba(100,60,200,.14);padding:2.5rem 2rem 2rem;text-align:center;margin-bottom:1rem;position:relative;overflow:hidden;}
+.q-card::after{content:'🏙️';position:absolute;font-size:80px;opacity:.05;bottom:-10px;right:-10px;}
+.cat-lbl{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem;}
+.hu-word{font-size:44px;font-weight:900;color:var(--ink);letter-spacing:-.02em;margin-bottom:.4rem;line-height:1.1;}
+.hu-deco{font-size:14px;color:var(--muted);margin-bottom:1.75rem;}
+.en-input{
+  width:100%;max-width:300px;
+  border:3px solid #ffe0cc;border-radius:16px;
+  background:#fff8f5;color:var(--ink);
+  font-size:22px;font-weight:800;text-align:center;
+  padding:14px 16px;outline:none;
+  transition:border-color .2s,box-shadow .2s,background .2s;
+  display:block;margin:0 auto 1rem;
+}
+.en-input:focus{border-color:var(--orange);box-shadow:0 0 0 4px rgba(255,159,28,.15);background:#fff;}
+.en-input.inp-ok{border-color:var(--green);background:#d1faf0;color:var(--green2);}
+.en-input.inp-ko{border-color:var(--red);background:#ffe4ec;color:var(--red2);}
+.feedback{min-height:28px;font-size:16px;font-weight:700;border-radius:12px;padding:6px 16px;display:inline-block;}
+.fb-ok{background:#d1faf0;color:var(--green2);}
+.fb-ko{background:#ffe4ec;color:var(--red2);}
+.fb-hint{color:var(--muted);}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:8px;}
+.btn{flex:1;border:none;border-radius:16px;font-size:14px;font-weight:800;padding:14px 8px;cursor:pointer;transition:transform .12s,box-shadow .12s,opacity .12s;}
+.btn:active{transform:scale(.96);}
+.btn:disabled{opacity:.3;cursor:not-allowed;transform:none;}
+.btn-back{background:#ede9ff;color:var(--purple);}
+.btn-back:hover:not(:disabled){background:#ddd6ff;}
+.btn-skip{background:#fff0fa;color:var(--pink);}
+.btn-skip:hover:not(:disabled){background:#fde0f2;}
+.btn-check{background:linear-gradient(135deg,var(--orange),var(--pink));color:#fff;box-shadow:0 4px 16px rgba(255,107,157,.3);}
+.btn-check:hover:not(:disabled){transform:translateY(-1px);}
+.btn-next{background:linear-gradient(135deg,var(--green),#00b4d8);color:#fff;box-shadow:0 4px 16px rgba(6,214,160,.3);animation:pulse 1.5s infinite;}
+.btn-next:hover{transform:translateY(-1px);}
+
+/* RESULT */
+.res-card{background:#fff;border-radius:28px;box-shadow:0 8px 40px rgba(100,60,200,.15);padding:2.5rem 2rem 2rem;text-align:center;margin-bottom:1rem;}
+.res-emoji{font-size:68px;display:block;margin-bottom:.75rem;animation:pop .5s ease;}
+.res-pct{font-size:56px;font-weight:900;letter-spacing:-.03em;background:linear-gradient(135deg,var(--orange),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.res-msg{font-size:19px;font-weight:800;color:var(--ink);margin:.25rem 0 1.5rem;}
+.res-stats{display:flex;gap:12px;margin-bottom:1.75rem;}
+.stat-box{flex:1;border-radius:18px;padding:1rem;}
+.stat-g{background:#d1faf0;}
+.stat-r{background:#ffe4ec;}
+.stat-num{font-size:32px;font-weight:900;display:block;}
+.stat-g .stat-num{color:var(--green2);}
+.stat-r .stat-num{color:var(--red2);}
+.stat-lbl{font-size:12px;font-weight:700;}
+.stat-g .stat-lbl{color:var(--green2);}
+.stat-r .stat-lbl{color:var(--red2);}
+.btn-again{display:block;width:100%;background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;border:none;border-radius:18px;padding:17px;font-size:19px;font-weight:900;cursor:pointer;box-shadow:0 4px 22px rgba(58,134,255,.3);transition:transform .15s;}
+.btn-again:hover{transform:translateY(-2px);}
+.btn-again:active{transform:scale(.97);}
+
+/* WORD LISTS */
+.list-section{margin-bottom:1rem;}
+.list-title{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;padding-left:4px;}
+.word-list{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 18px rgba(100,60,200,.09);}
+.word-row{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid #fff0e8;font-size:14px;}
+.word-row:last-child{border-bottom:none;}
+.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.dot-g{background:var(--green);}
+.dot-r{background:var(--red);}
+.wr-hu{color:var(--muted);min-width:130px;font-weight:700;}
+.wr-typed{flex:1;font-weight:800;color:var(--ink);}
+.wr-correct{color:var(--green2);font-size:13px;font-weight:700;}
+.wr-ko-typed{color:var(--red2);}
+</style>
+</head>
+<body>
+<div class="stars-wrap" id="starsWrap"></div>
+<div class="top-bar"><span>🏙️ Város &amp; Épületek &nbsp;·&nbsp; Magyar → Angol</span></div>
+
+<!-- START -->
+<div class="screen active" id="scStart">
+  <div class="start-hero">
+    <span class="hero-icon">🏙️</span>
+    <div class="hero-title">Magyar → Angol<br>Szókincsteszt</div>
+    <div class="hero-sub">Írd be minden szó angol megfelelőjét!<br>Minden körben más sorrendben jönnek a szavak.</div>
+    <div class="badge">📚 25 szó &nbsp;·&nbsp; Város & épületek</div><br>
+    <button class="btn-start" onclick="startQuiz()">🚀 Kezdjük!</button>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="screen" id="scQuiz">
+  <div class="prog-wrap">
+    <div class="prog-row">
+      <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+      <div class="prog-lbl" id="progLbl">1/25</div>
+    </div>
+    <div class="mini-scores">
+      <div class="chip chip-g">✅ <span id="scoreG">0</span> helyes</div>
+      <div class="chip chip-r">❌ <span id="scoreR">0</span> téves</div>
+    </div>
+  </div>
+  <div class="q-card">
+    <div class="cat-lbl">Magyar szó</div>
+    <div class="hu-word" id="huWord">–</div>
+    <div class="hu-deco">Mi az angol megfelelője? ✏️</div>
+    <input class="en-input" id="enInput" type="text" placeholder="angol szó..." autocomplete="off" spellcheck="false">
+    <div><span class="feedback" id="feedback"></span></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-back" id="btnBack" onclick="goBack()" disabled>◀ Vissza</button>
+    <button class="btn btn-skip" onclick="skipWord()">⏭ Kihagyás</button>
+    <button class="btn btn-check" id="btnMain" onclick="handleMain()">✓ Ellenőrzés</button>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div class="screen" id="scResult">
+  <div class="res-card">
+    <span class="res-emoji" id="resEmoji">🎉</span>
+    <div class="res-pct" id="resPct">–%</div>
+    <div class="res-msg" id="resMsg">–</div>
+    <div class="res-stats">
+      <div class="stat-box stat-g"><span class="stat-num" id="resCnt">0</span><span class="stat-lbl">helyes</span></div>
+      <div class="stat-box stat-r"><span class="stat-num" id="resWrong">0</span><span class="stat-lbl">téves / kihagyott</span></div>
+    </div>
+    <button class="btn-again" onclick="startQuiz()">🔄 Újra! (más sorrend)</button>
+  </div>
+  <div class="list-section" id="wrongSection" style="display:none">
+    <div class="list-title">❌ Téves / kihagyott</div>
+    <div class="word-list" id="wrongList"></div>
+  </div>
+  <div class="list-section" id="correctSection" style="display:none">
+    <div class="list-title">✅ Helyes válaszok</div>
+    <div class="word-list" id="correctList"></div>
+  </div>
+</div>
+
+<script>
+const WORDS=[
+  {hu:"lakás",             en:["flat","apartment"]},
+  {hu:"város",             en:["town","city"]},
+  {hu:"nagyváros",         en:["city","big city"]},
+  {hu:"főváros",           en:["capital city","capital"]},
+  {hu:"falu",              en:["village"]},
+  {hu:"épület",            en:["building"]},
+  {hu:"iskola",            en:["school"]},
+  {hu:"templom",           en:["church"]},
+  {hu:"kórház",            en:["hospital"]},
+  {hu:"étterem",           en:["restaurant"]},
+  {hu:"bank",              en:["bank"]},
+  {hu:"pénz",              en:["money"]},
+  {hu:"mozi",              en:["cinema","movie theater","movie theatre"]},
+  {hu:"színház",           en:["theatre","theater"]},
+  {hu:"szálloda",          en:["hotel"]},
+  {hu:"uszoda",            en:["swimming pool"]},
+  {hu:"kávézó",            en:["café","cafe","coffee shop"]},
+  {hu:"posta",             en:["post office"]},
+  {hu:"iroda",             en:["office"]},
+  {hu:"múzeum",            en:["museum"]},
+  {hu:"bevásárlóközpont",  en:["shopping centre","shopping center","shopping mall","mall"]},
+  {hu:"bolt",              en:["shop","store"]},
+  {hu:"állomás",           en:["station","train station","bus station"]},
+  {hu:"tér",               en:["square"]},
+  {hu:"piac",              en:["market"]}
+];
+
+const STARS=['⭐','🌟','✨','💫','🎊','🎉','🥳','🌈'];
+let order=[],idx=0,correct=0,wrong=0,results=[],history=[],checked=false;
+
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function norm(s){return s.trim().toLowerCase().replace(/\s+/g,' ');}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+
+function spawnStars(x,y){
+  const wrap=document.getElementById('starsWrap');
+  for(let i=0;i<8;i++){
+    const s=document.createElement('div');s.className='star-p';
+    s.textContent=STARS[Math.floor(Math.random()*STARS.length)];
+    s.style.left=(x+(-70+Math.random()*140))+'px';
+    s.style.top=(y+(-60+Math.random()*100))+'px';
+    s.style.animationDelay=(Math.random()*.4)+'s';
+    wrap.appendChild(s);setTimeout(()=>s.remove(),1300);
+  }
+}
+
+function startQuiz(){
+  order=shuffle(WORDS);idx=0;correct=0;wrong=0;results=[];history=[];checked=false;
+  document.getElementById('scoreG').textContent='0';
+  document.getElementById('scoreR').textContent='0';
+  show('scQuiz');loadWord();
+}
+
+function loadWord(){
+  const w=order[idx];
+  document.getElementById('huWord').textContent=w.hu;
+  const inp=document.getElementById('enInput');
+  inp.value='';inp.className='en-input';inp.disabled=false;
+  const fb=document.getElementById('feedback');
+  fb.textContent='';fb.className='feedback';
+  const bm=document.getElementById('btnMain');
+  bm.textContent='✓ Ellenőrzés';bm.className='btn btn-check';
+  checked=false;
+  const total=WORDS.length;
+  document.getElementById('progFill').style.width=(idx/total*100)+'%';
+  document.getElementById('progLbl').textContent=(idx+1)+'/'+total;
+  document.getElementById('btnBack').disabled=(history.length===0);
+  setTimeout(()=>inp.focus(),60);
+}
+
+function handleMain(){if(!checked)checkWord();else advance();}
+
+function checkWord(){
+  const w=order[idx];
+  const inp=document.getElementById('enInput');
+  const val=norm(inp.value);
+  const fb=document.getElementById('feedback');
+  if(!val){fb.className='feedback fb-hint';fb.textContent='Írd be a választ! 😊';return;}
+  const ok=w.en.some(a=>norm(a)===val);
+  checked=true;inp.disabled=true;
+  const bm=document.getElementById('btnMain');
+  const isLast=idx+1>=WORDS.length;
+  if(ok){
+    inp.className='en-input inp-ok';fb.className='feedback fb-ok';
+    fb.textContent='🎉 Helyes! Szuper!';
+    correct++;document.getElementById('scoreG').textContent=correct;
+    results.push({word:w,typed:inp.value,ok:true});
+    const r=inp.getBoundingClientRect();
+    spawnStars(r.left+r.width/2,r.top+r.height/2);
+  } else {
+    inp.className='en-input inp-ko';fb.className='feedback fb-ko';
+    fb.textContent='😅 Helyes: '+w.en[0];
+    wrong++;document.getElementById('scoreR').textContent=wrong;
+    results.push({word:w,typed:inp.value,ok:false});
+  }
+  bm.textContent=isLast?'Eredmény 🏆':'Következő →';
+  bm.className='btn btn-next';
+  history.push(idx);
+  document.getElementById('btnBack').disabled=false;
+}
+
+function skipWord(){
+  if(checked){advance();return;}
+  const w=order[idx];
+  const inp=document.getElementById('enInput');
+  inp.className='en-input inp-ko';inp.disabled=true;
+  const fb=document.getElementById('feedback');
+  fb.className='feedback fb-ko';fb.textContent='⏭ Megoldás: '+w.en[0];
+  wrong++;document.getElementById('scoreR').textContent=wrong;
+  results.push({word:w,typed:'(kihagyva)',ok:false});
+  const bm=document.getElementById('btnMain');
+  const isLast=idx+1>=WORDS.length;
+  bm.textContent=isLast?'Eredmény 🏆':'Következő →';
+  bm.className='btn btn-next';checked=true;
+  history.push(idx);document.getElementById('btnBack').disabled=false;
+}
+
+function advance(){idx++;if(idx>=WORDS.length){showResult();return;}loadWord();}
+
+function goBack(){
+  if(history.length===0)return;
+  const last=results.pop();
+  if(last.ok){correct--;document.getElementById('scoreG').textContent=correct;}
+  else{wrong--;document.getElementById('scoreR').textContent=wrong;}
+  history.pop();idx--;checked=false;
+  loadWord();
+  document.getElementById('enInput').value=last.typed==='(kihagyva)'?'':last.typed;
+}
+
+function showResult(){
+  const total=WORDS.length;
+  const pct=Math.round(correct/total*100);
+  const emoji=pct===100?'🏆':pct>=80?'🥳':pct>=60?'😊':'💪';
+  const msg=pct===100?'Tökéletes! Bajnok vagy!':pct>=80?'Nagyon jó! Büszke lehetsz!':pct>=60?'Szép munka! Haladás!':'Még egy kör, menni fog!';
+  document.getElementById('resEmoji').textContent=emoji;
+  document.getElementById('resPct').textContent=pct+'%';
+  document.getElementById('resMsg').textContent=msg;
+  document.getElementById('resCnt').textContent=correct;
+  document.getElementById('resWrong').textContent=wrong;
+  const wrongRes=results.filter(r=>!r.ok);
+  const correctRes=results.filter(r=>r.ok);
+  const ws=document.getElementById('wrongSection'),wl=document.getElementById('wrongList');
+  if(wrongRes.length){
+    ws.style.display='block';
+    wl.innerHTML=wrongRes.map(r=>`<div class="word-row"><div class="dot dot-r"></div><div class="wr-hu">${r.word.hu}</div><div class="wr-typed wr-ko-typed">${r.typed}</div><div class="wr-correct">→ ${r.word.en[0]}</div></div>`).join('');
+  } else ws.style.display='none';
+  const cs=document.getElementById('correctSection'),cl=document.getElementById('correctList');
+  if(correctRes.length){
+    cs.style.display='block';
+    cl.innerHTML=correctRes.map(r=>`<div class="word-row"><div class="dot dot-g"></div><div class="wr-hu">${r.word.hu}</div><div class="wr-typed">${r.typed}</div></div>`).join('');
+  } else cs.style.display='none';
+  show('scResult');
+}
+
+document.getElementById('enInput').addEventListener('keydown',e=>{if(e.key==='Enter')handleMain();});
+</script>
+</body>
+</html>
