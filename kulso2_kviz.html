@@ -237,8 +237,8 @@ function loadWord(){
   const fb=document.getElementById('feedback');
   fb.textContent='';fb.className='feedback';
   const nb=document.getElementById('noteBox');
-  if(w.note){nb.textContent=w.note;nb.classList.add('visible');}
-  else{nb.textContent='';nb.classList.remove('visible');}
+  nb.textContent=w.note||'';
+  nb.classList.remove('visible');
   const bm=document.getElementById('btnMain');
   bm.textContent='✓ Ellenőrzés';bm.className='btn btn-check';
   checked=false;
@@ -259,6 +259,8 @@ function checkWord(){
   if(!val){fb.className='feedback fb-hint';fb.textContent='Írd be a választ! 😊';return;}
   const ok=w.en.some(a=>norm(a)===val);
   checked=true;inp.disabled=true;
+  const nb2=document.getElementById('noteBox');
+  if(order[idx].note) nb2.classList.add('visible');
   const bm=document.getElementById('btnMain');
   const isLast=idx+1>=WORDS.length;
   if(ok){
@@ -287,6 +289,8 @@ function skipWord(){
   inp.className='en-input inp-ko';inp.disabled=true;
   const fb=document.getElementById('feedback');
   fb.className='feedback fb-ko';fb.textContent='⏭ Megoldás: '+w.en[0];
+  const nb3=document.getElementById('noteBox');
+  if(w.note) nb3.classList.add('visible');
   wrong++;document.getElementById('scoreR').textContent=wrong;
   results.push({word:w,typed:'(kihagyva)',ok:false});
   const bm=document.getElementById('btnMain');
