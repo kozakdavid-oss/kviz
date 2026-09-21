@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Angol Szókincstesztek 🏫</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#1a1040;--muted:#7a6f9a;--bg-from:#e8f0ff;--bg-to:#ffe8f5;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6px) rotate(2deg)}}
+
+html,body{min-height:100%;font-family:'Segoe UI',system-ui,sans-serif;}
+body{
+  background:linear-gradient(135deg,#e8f0ff 0%,#f5e8ff 40%,#ffe8f5 100%);
+  min-height:100vh;
+  padding:1.5rem 1rem 3rem;
+  display:flex;flex-direction:column;align-items:center;
+}
+
+/* HEADER */
+.header{text-align:center;margin-bottom:2.5rem;animation:fadeUp .5s ease;}
+.header-icon{font-size:64px;display:block;animation:bounce 2.5s infinite;margin-bottom:.75rem;}
+.header h1{font-size:26px;font-weight:900;color:var(--ink);line-height:1.2;margin-bottom:.5rem;}
+.header p{font-size:15px;color:var(--muted);line-height:1.6;}
+.class-badge{display:inline-block;background:linear-gradient(90deg,#7b5ea7,#3a86ff);color:#fff;border-radius:99px;padding:5px 18px;font-size:13px;font-weight:700;margin-top:.75rem;}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:14px;
+  width:100%;max-width:520px;
+}
+
+/* CARD */
+.card{
+  background:#fff;
+  border-radius:22px;
+  box-shadow:0 6px 28px rgba(100,60,200,.12);
+  padding:1.5rem 1.25rem 1.25rem;
+  text-decoration:none;
+  color:inherit;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;
+  transition:transform .18s,box-shadow .18s;
+  animation:fadeUp .4s ease both;
+  position:relative;
+  overflow:hidden;
+}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(100,60,200,.18);}
+.card:active{transform:scale(.97);}
+
+.card-emoji{font-size:44px;margin-bottom:.75rem;display:block;animation:float 3s ease-in-out infinite;}
+.card-title{font-size:15px;font-weight:900;color:var(--ink);margin-bottom:.3rem;line-height:1.3;}
+.card-sub{font-size:12px;color:var(--muted);margin-bottom:.9rem;line-height:1.4;}
+.card-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  border-radius:99px;padding:4px 12px;
+  font-size:12px;font-weight:700;color:#fff;
+}
+
+/* COLOUR THEMES per card */
+.c1{background:linear-gradient(135deg,#3a86ff,#7b5ea7);}
+.c2{background:linear-gradient(135deg,#ff9f1c,#ff6b9d);}
+.c3{background:linear-gradient(135deg,#00b4d8,#3a86ff);}
+.c4{background:linear-gradient(135deg,#06d6a0,#00b4d8);}
+.c5{background:linear-gradient(135deg,#8bc34a,#06d6a0);}
+.c6{background:linear-gradient(135deg,#e91e8c,#7b5ea7);}
+.c7{background:linear-gradient(135deg,#ff9f1c,#e91e8c);}
+.c8{background:linear-gradient(135deg,#4c6ef5,#7b5ea7);}
+
+/* Decorative corner blob */
+.card::after{
+  content:'';position:absolute;
+  width:80px;height:80px;
+  border-radius:50%;
+  top:-25px;right:-25px;
+  opacity:.08;
+  background:#000;
+}
+
+/* FOOTER */
+.footer{margin-top:2.5rem;text-align:center;font-size:13px;color:var(--muted);}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="header-icon">🏫</span>
+  <h1>Angol Szókincstesztek</h1>
+  <p>Válassz egy témakört és gyakorolj!<br>Minden körben más sorrendben jönnek a szavak.</p>
+  <div class="class-badge">📚 4. osztály · Magyar → Angol</div>
+</div>
+
+<div class="grid">
+
+  <a class="card" href="magyar_angol_kviz.html" style="animation-delay:.05s">
+    <span class="card-emoji">🏠</span>
+    <div class="card-title">Otthon &amp; Helyiségek</div>
+    <div class="card-sub">szoba, bútor, háztartás</div>
+    <span class="card-badge c1">34 szó</span>
+  </a>
+
+  <a class="card" href="varos_kviz.html" style="animation-delay:.1s">
+    <span class="card-emoji">🏙️</span>
+    <div class="card-title">Város &amp; Épületek</div>
+    <div class="card-sub">város, intézmények, helyek</div>
+    <span class="card-badge c2">25 szó</span>
+  </a>
+
+  <a class="card" href="kulso_kviz.html" style="animation-delay:.15s">
+    <span class="card-emoji">🧑</span>
+    <div class="card-title">Külső megjelenés 1.</div>
+    <div class="card-sub">haj, szem, testalkat</div>
+    <span class="card-badge c3">15 szó</span>
+  </a>
+
+  <a class="card" href="kulso2_kviz.html" style="animation-delay:.2s">
+    <span class="card-emoji">✂️</span>
+    <div class="card-title">Külső megjelenés 2.</div>
+    <div class="card-sub">göndör, hullámos, egyenes...</div>
+    <span class="card-badge c4">8 szó</span>
+  </a>
+
+  <a class="card" href="vegyes_kviz.html" style="animation-delay:.25s">
+    <span class="card-emoji">📖</span>
+    <div class="card-title">Vegyes szavak</div>
+    <div class="card-sub">igék, kifejezések, mindennapi szavak</div>
+    <span class="card-badge c5">21 szó</span>
+  </a>
+
+  <a class="card" href="ruha_kviz.html" style="animation-delay:.3s">
+    <span class="card-emoji">👗</span>
+    <div class="card-title">Ruházat 1.</div>
+    <div class="card-sub">ruhák, cipők, kiegészítők</div>
+    <span class="card-badge c6">22 szó</span>
+  </a>
+
+  <a class="card" href="ruha2_kviz.html" style="animation-delay:.35s">
+    <span class="card-emoji">🎽</span>
+    <div class="card-title">Ruházat 2.</div>
+    <div class="card-sub">egyenruha, kedvenc, jelvény...</div>
+    <span class="card-badge c8">5 szó</span>
+  </a>
+
+</div>
+
+  <a class="card" href="butor_kviz.html" style="animation-delay:.4s">
+    <span class="card-emoji">🛋️</span>
+    <div class="card-title">Bútorok</div>
+    <div class="card-sub">szék, asztal, szekrény, polc...</div>
+    <span class="card-badge c7">15 szó</span>
+  </a>
+
+  <a class="card" href="etel_kviz.html" style="animation-delay:.45s">
+    <span class="card-emoji">🍎</span>
+    <div class="card-title">Ételek &amp; italok</div>
+    <div class="card-sub">alma, kenyér, tej, rizs...</div>
+    <span class="card-badge" style="background:linear-gradient(135deg,#ff6b6b,#c0392b)">15 szó</span>
+  </a>
+
+  <a class="card" href="targy_kviz.html" style="animation-delay:.5s">
+    <span class="card-emoji">🎒</span>
+    <div class="card-title">Tárgyak</div>
+    <div class="card-sub">kulcs, táska, esernyő, labda...</div>
+    <span class="card-badge" style="background:linear-gradient(135deg,#00c9a7,#007a65)">15 szó</span>
+  </a>
+
+  <a class="card" href="iroda_kviz.html" style="animation-delay:.55s">
+    <span class="card-emoji">✏️</span>
+    <div class="card-title">Irodai eszközök</div>
+    <div class="card-sub">toll, ceruza, radír, olló...</div>
+    <span class="card-badge" style="background:linear-gradient(135deg,#3a86ff,#1a44d4)">15 szó</span>
+  </a>
+
+</div>
+
+<div class="footer">
+  🌟 Minden teszt újra kitölthető, véletlenszerű sorrendben 🌟
+</div>
+
+</body>
+</html>
