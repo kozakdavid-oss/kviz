@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Angol Szókincstesztek 🏫</title>
+<title>Gyakorló feladatok 🏫</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -83,6 +83,20 @@ body{
   background:#000;
 }
 
+.section-title{width:100%;max-width:520px;display:flex;align-items:center;gap:10px;margin:0 0 1rem;font-size:18px;font-weight:900;color:var(--ink);}
+.section-title span{background:linear-gradient(90deg,#7b5ea7,#3a86ff);color:#fff;border-radius:99px;padding:4px 14px;font-size:13px;}
+.section-title.hist span{background:linear-gradient(90deg,#f59e0b,#0f766e);}
+.grid{margin-bottom:2.5rem;}
+.grade-badge{display:inline-block;background:linear-gradient(90deg,#7b5ea7,#3a86ff);color:#fff;border-radius:99px;padding:6px 20px;font-size:14px;font-weight:800;margin-top:.9rem;}
+.tabs{display:flex;gap:10px;width:100%;max-width:520px;margin:0 0 1.75rem;background:rgba(255,255,255,.6);padding:6px;border-radius:20px;box-shadow:0 4px 18px rgba(100,60,200,.1);}
+.tab{flex:1;border:none;border-radius:15px;padding:14px 10px;font-size:16px;font-weight:900;cursor:pointer;background:transparent;color:#7a6f9a;transition:background .2s,color .2s,transform .1s;font-family:inherit;}
+.tab:active{transform:scale(.97);}
+.tab.active{background:#fff;color:#1a1040;box-shadow:0 3px 12px rgba(100,60,200,.18);}
+.tab.active.t-en{background:linear-gradient(135deg,#3a86ff,#7b5ea7);color:#fff;}
+.tab.active.t-hist{background:linear-gradient(135deg,#f59e0b,#0f766e);color:#fff;}
+.panel{display:none;width:100%;max-width:520px;flex-direction:column;align-items:center;}
+.panel.active{display:flex;animation:fadeUp .35s ease;}
+.panel .section-title{margin-top:0;}
 /* FOOTER */
 .footer{margin-top:2.5rem;text-align:center;font-size:13px;color:var(--muted);}
 </style>
@@ -91,97 +105,120 @@ body{
 
 <div class="header">
   <span class="header-icon">🏫</span>
-  <h1>Angol Szókincstesztek</h1>
-  <p>Válassz egy témakört és gyakorolj!<br>Minden körben más sorrendben jönnek a szavak.</p>
-  <div class="class-badge">📚 4. osztály · Magyar → Angol</div>
+  <h1>Gyakorló feladatok</h1>
+  <p>Válassz tantárgyat és témakört, és gyakorolj!<br>Minden körben más sorrendben jönnek a feladatok.</p>
+  <div class="grade-badge">📚 5. osztály</div>
 </div>
 
-<div class="grid">
+<div class="tabs">
+  <button class="tab t-en" data-p="angol" onclick="showTab('angol')">🇬🇧 Angol</button>
+  <button class="tab t-hist" data-p="tortenelem" onclick="showTab('tortenelem')">🏛️ Történelem</button>
+</div>
 
-  <a class="card" href="magyar_angol_kviz.html" style="animation-delay:.05s">
+<div class="panel" id="p-angol">
+<div class="section-title"><span>5. osztály</span> 🇬🇧 Angol szókincs</div>
+<div class="grid">
+<a class="card" href="magyar_angol_kviz.html" style="animation-delay:.05s">
     <span class="card-emoji">🏠</span>
     <div class="card-title">Otthon &amp; Helyiségek</div>
     <div class="card-sub">szoba, bútor, háztartás</div>
     <span class="card-badge c1">34 szó</span>
   </a>
-
-  <a class="card" href="varos_kviz.html" style="animation-delay:.1s">
+<a class="card" href="varos_kviz.html" style="animation-delay:.1s">
     <span class="card-emoji">🏙️</span>
     <div class="card-title">Város &amp; Épületek</div>
     <div class="card-sub">város, intézmények, helyek</div>
     <span class="card-badge c2">25 szó</span>
   </a>
-
-  <a class="card" href="kulso_kviz.html" style="animation-delay:.15s">
+<a class="card" href="kulso_kviz.html" style="animation-delay:.15s">
     <span class="card-emoji">🧑</span>
     <div class="card-title">Külső megjelenés 1.</div>
     <div class="card-sub">haj, szem, testalkat</div>
     <span class="card-badge c3">15 szó</span>
   </a>
-
-  <a class="card" href="kulso2_kviz.html" style="animation-delay:.2s">
+<a class="card" href="kulso2_kviz.html" style="animation-delay:.2s">
     <span class="card-emoji">✂️</span>
     <div class="card-title">Külső megjelenés 2.</div>
     <div class="card-sub">göndör, hullámos, egyenes...</div>
     <span class="card-badge c4">8 szó</span>
   </a>
-
-  <a class="card" href="vegyes_kviz.html" style="animation-delay:.25s">
+<a class="card" href="vegyes_kviz.html" style="animation-delay:.25s">
     <span class="card-emoji">📖</span>
     <div class="card-title">Vegyes szavak</div>
     <div class="card-sub">igék, kifejezések, mindennapi szavak</div>
     <span class="card-badge c5">21 szó</span>
   </a>
-
-  <a class="card" href="ruha_kviz.html" style="animation-delay:.3s">
+<a class="card" href="ruha_kviz.html" style="animation-delay:.3s">
     <span class="card-emoji">👗</span>
     <div class="card-title">Ruházat 1.</div>
     <div class="card-sub">ruhák, cipők, kiegészítők</div>
     <span class="card-badge c6">22 szó</span>
   </a>
-
-  <a class="card" href="ruha2_kviz.html" style="animation-delay:.35s">
+<a class="card" href="ruha2_kviz.html" style="animation-delay:.35s">
     <span class="card-emoji">🎽</span>
     <div class="card-title">Ruházat 2.</div>
     <div class="card-sub">egyenruha, kedvenc, jelvény...</div>
     <span class="card-badge c8">5 szó</span>
   </a>
-
-</div>
-
-  <a class="card" href="butor_kviz.html" style="animation-delay:.4s">
+<a class="card" href="butor_kviz.html" style="animation-delay:.4s">
     <span class="card-emoji">🛋️</span>
     <div class="card-title">Bútorok</div>
     <div class="card-sub">szék, asztal, szekrény, polc...</div>
     <span class="card-badge c7">15 szó</span>
   </a>
-
-  <a class="card" href="etel_kviz.html" style="animation-delay:.45s">
+<a class="card" href="etel_kviz.html" style="animation-delay:.45s">
     <span class="card-emoji">🍎</span>
     <div class="card-title">Ételek &amp; italok</div>
     <div class="card-sub">alma, kenyér, tej, rizs...</div>
     <span class="card-badge" style="background:linear-gradient(135deg,#ff6b6b,#c0392b)">15 szó</span>
   </a>
-
-  <a class="card" href="targy_kviz.html" style="animation-delay:.5s">
+<a class="card" href="targy_kviz.html" style="animation-delay:.5s">
     <span class="card-emoji">🎒</span>
     <div class="card-title">Tárgyak</div>
     <div class="card-sub">kulcs, táska, esernyő, labda...</div>
     <span class="card-badge" style="background:linear-gradient(135deg,#00c9a7,#007a65)">15 szó</span>
   </a>
-
-  <a class="card" href="iroda_kviz.html" style="animation-delay:.55s">
+<a class="card" href="iroda_kviz.html" style="animation-delay:.55s">
     <span class="card-emoji">✏️</span>
     <div class="card-title">Irodai eszközök</div>
     <div class="card-sub">toll, ceruza, radír, olló...</div>
     <span class="card-badge" style="background:linear-gradient(135deg,#3a86ff,#1a44d4)">15 szó</span>
   </a>
+</div>
+
+</div>
+
+<div class="panel" id="p-tortenelem">
+<div class="section-title hist"><span>5. osztály</span> 🏛️ Történelem</div>
+<div class="grid">
+  <a class="card" href="tortenelem_egy.html" style="animation-delay:.05s">
+    <span class="card-emoji">📜</span>
+    <div class="card-title">Történelem_egy</div>
+    <div class="card-sub">források, régészet, címer, zászló, pecsét</div>
+    <span class="card-badge" style="background:linear-gradient(135deg,#f59e0b,#b45309)">21 feladat</span>
+  </a>
+
+  <a class="card" href="tortenelem_2.html" style="animation-delay:.1s">
+    <span class="card-emoji">⏳</span>
+    <div class="card-title">Történelem_2</div>
+    <div class="card-sub">időszámítás, évszázadok, korszakok</div>
+    <span class="card-badge" style="background:linear-gradient(135deg,#14b8a6,#0f766e)">21 feladat</span>
+  </a>
+</div>
 
 </div>
 
 <div class="footer">
-  🌟 Minden teszt újra kitölthető, véletlenszerű sorrendben 🌟
+  🌟 Minden feladatsor újra kitölthető, véletlenszerű sorrendben 🌟
 </div>
 
+<script>
+function showTab(p){
+  document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id==='p-'+p));
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.p===p));
+  history.replaceState(null,'','#'+p);
+}
+showTab(location.hash==='#tortenelem'?'tortenelem':'angol');
+</script>
 </body>
 </html>

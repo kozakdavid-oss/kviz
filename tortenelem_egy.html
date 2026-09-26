@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Történelem_egy 📜</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--a1:#f59e0b;--a2:#b45309;--green:#06d6a0;--green2:#05a880;--red:#ef476f;--red2:#c03057;--purple:#7b5ea7;--pink:#ff6b9d;--ink:#1a1040;--muted:#7a6f9a;}
+@keyframes pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes starfly{0%{transform:scale(0) rotate(0deg);opacity:1}100%{transform:scale(1.8) rotate(60deg);opacity:0}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+html,body{min-height:100%;font-family:'Segoe UI',system-ui,sans-serif;}
+body{background:linear-gradient(135deg,#fff7e6 0%,#fdebd3 50%,#f3e8ff 100%);min-height:100vh;padding:1rem;display:flex;flex-direction:column;align-items:center;}
+.stars-wrap{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:999;}
+.star-p{position:absolute;font-size:24px;animation:starfly 1s ease-out forwards;}
+.top-bar{width:100%;max-width:560px;padding:.5rem 0 1.25rem;text-align:center;}
+.top-bar a{font-size:14px;font-weight:700;color:var(--a2);letter-spacing:.04em;text-decoration:none;}
+.screen{display:none;width:100%;max-width:560px;}
+.screen.active{display:block;animation:fadeUp .3s ease;}
+.card{background:#fff;border-radius:28px;box-shadow:0 8px 40px rgba(60,40,120,.13);padding:2rem 1.5rem;margin-bottom:1rem;}
+.start{text-align:center;}
+.hero-icon{font-size:72px;display:block;animation:bounce 2.2s infinite;margin-bottom:.5rem;}
+.hero-title{font-size:30px;font-weight:900;color:var(--ink);margin-bottom:.4rem;}
+.hero-sub{font-size:15px;color:var(--muted);margin-bottom:1.25rem;line-height:1.6;}
+.types{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:1.5rem;}
+.types span{background:#f4f1ff;color:var(--purple);border-radius:99px;padding:5px 12px;font-size:12px;font-weight:700;}
+.btn-big{display:block;width:100%;background:linear-gradient(135deg,var(--a1),var(--a2));color:#fff;border:none;border-radius:18px;padding:17px;font-size:19px;font-weight:900;cursor:pointer;box-shadow:0 4px 22px rgba(0,0,0,.15);transition:transform .15s;}
+.btn-big:hover{transform:translateY(-2px);}
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.prog-track{flex:1;height:14px;background:rgba(255,255,255,.7);border-radius:99px;overflow:hidden;box-shadow:inset 0 2px 5px rgba(0,0,0,.1);}
+.prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--a1),var(--a2));transition:width .5s;}
+.prog-lbl{font-size:14px;font-weight:800;color:var(--a2);min-width:48px;text-align:right;}
+.chips{display:flex;gap:8px;margin-bottom:1rem;}
+.chip{border-radius:99px;padding:6px 15px;font-size:14px;font-weight:800;}
+.chip-g{background:#d1faf0;color:var(--green2);}.chip-r{background:#ffe4ec;color:var(--red2);}
+.type-badge{display:inline-block;background:linear-gradient(90deg,var(--a1),var(--a2));color:#fff;border-radius:99px;padding:5px 14px;font-size:12px;font-weight:800;margin-bottom:1rem;}
+.q-text{font-size:20px;font-weight:800;color:var(--ink);line-height:1.4;margin-bottom:1.25rem;}
+.q-text .blank{display:inline-block;min-width:80px;border-bottom:3px dashed var(--a1);margin:0 4px;}
+.statement,.definition{background:#f8f6ff;border-left:5px solid var(--a1);border-radius:12px;padding:14px 16px;font-size:18px;font-weight:700;color:var(--ink);line-height:1.45;margin-bottom:1.25rem;}
+.definition{font-style:italic;}
+.opts{display:flex;flex-direction:column;gap:10px;}
+.opt{text-align:left;border:3px solid #ebe6ff;background:#fbfaff;border-radius:16px;padding:13px 16px;font-size:16px;font-weight:700;color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s;display:flex;align-items:center;gap:10px;}
+.opt:hover:not(:disabled){border-color:var(--a1);}
+.opt .mark{flex-shrink:0;width:26px;height:26px;border-radius:50%;border:3px solid #cfc7f5;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.opt.square .mark{border-radius:7px;}
+.opt.sel{border-color:var(--a1);background:#fff;}
+.opt.sel .mark{background:var(--a1);border-color:var(--a1);color:#fff;}
+.opt.ok{border-color:var(--green);background:#d1faf0;}
+.opt.ok .mark{background:var(--green);border-color:var(--green);color:#fff;}
+.opt.ko{border-color:var(--red);background:#ffe4ec;}
+.opt.ko .mark{background:var(--red);border-color:var(--red);color:#fff;}
+.opt.miss{border-color:var(--green);border-style:dashed;}
+.opt:disabled{cursor:default;}
+.tf-row{display:flex;gap:12px;}
+.tf-row .opt{flex:1;justify-content:center;font-size:19px;padding:18px;}
+.txt-input{width:100%;border:3px solid #ebe6ff;border-radius:16px;background:#fbfaff;color:var(--ink);font-size:20px;font-weight:800;text-align:center;padding:14px;outline:none;}
+.txt-input:focus{border-color:var(--a1);background:#fff;}
+.txt-input.ok{border-color:var(--green);background:#d1faf0;color:var(--green2);}
+.txt-input.ko{border-color:var(--red);background:#ffe4ec;color:var(--red2);}
+.hint-btn{margin-top:10px;background:#fff8e1;border:2px solid #ffe082;color:#8a6d00;border-radius:12px;padding:7px 14px;font-size:13px;font-weight:800;cursor:pointer;}
+.hint-txt{margin-top:8px;font-size:14px;font-weight:700;color:#8a6d00;}
+.m-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border:3px solid #ebe6ff;border-radius:16px;margin-bottom:10px;background:#fbfaff;flex-wrap:wrap;}
+.m-left{flex:1 1 140px;font-weight:800;color:var(--ink);font-size:16px;}
+.m-row select{flex:1 1 180px;border:2px solid #d9d2ff;border-radius:12px;padding:10px;font-size:15px;font-weight:700;color:var(--ink);background:#fff;}
+.m-row.ok{border-color:var(--green);background:#d1faf0;}
+.m-row.ko{border-color:var(--red);background:#ffe4ec;}
+.m-fix{width:100%;font-size:13px;font-weight:800;color:var(--green2);}
+.feedback{margin-top:1rem;font-size:16px;font-weight:800;border-radius:12px;padding:8px 14px;display:none;}
+.feedback.show{display:block;}
+.fb-ok{background:#d1faf0;color:var(--green2);}.fb-ko{background:#ffe4ec;color:var(--red2);}.fb-hint{background:#f4f1ff;color:var(--purple);}
+.expl{margin-top:10px;background:#fffbe6;border:2px solid #ffe082;border-radius:14px;padding:10px 14px;font-size:14px;color:#6b5500;font-weight:600;display:none;line-height:1.45;}
+.expl.show{display:block;}
+.btn-row{display:flex;gap:8px;}
+.btn{flex:1;border:none;border-radius:16px;font-size:14px;font-weight:800;padding:14px 8px;cursor:pointer;}
+.btn:disabled{opacity:.3;cursor:not-allowed;}
+.btn-back{background:#ede9ff;color:var(--purple);}
+.btn-skip{background:#fff0fa;color:var(--pink);}
+.btn-check{background:linear-gradient(135deg,var(--a1),var(--a2));color:#fff;}
+.btn-next{background:linear-gradient(135deg,var(--green),#00b4d8);color:#fff;animation:pulse 1.5s infinite;}
+.res{text-align:center;}
+.res-emoji{font-size:68px;display:block;animation:pop .5s;}
+.res-pct{font-size:56px;font-weight:900;background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.res-msg{font-size:19px;font-weight:800;color:var(--ink);margin:.25rem 0 1.25rem;}
+.res-stats{display:flex;gap:12px;margin-bottom:1.25rem;}
+.stat{flex:1;border-radius:18px;padding:1rem;}
+.stat b{font-size:32px;display:block;}
+.stat span{font-size:12px;font-weight:700;}
+.stat-g{background:#d1faf0;color:var(--green2);}.stat-r{background:#ffe4ec;color:var(--red2);}
+.list-title{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 8px 4px;}
+.w-item{background:#fff;border-radius:16px;padding:12px 14px;margin-bottom:8px;box-shadow:0 3px 12px rgba(60,40,120,.07);font-size:14px;line-height:1.45;}
+.w-q{font-weight:800;color:var(--ink);margin-bottom:4px;}
+.w-u{color:var(--red2);font-weight:700;}
+.w-c{color:var(--green2);font-weight:800;}
+.home{display:block;text-align:center;margin-top:.75rem;font-weight:800;color:var(--a2);text-decoration:none;}
+</style>
+</head>
+<body>
+<div class="stars-wrap" id="stars"></div>
+<div class="top-bar"><a href="gyakorlas.html#tortenelem">⬅ Főoldal &nbsp;·&nbsp; 5. osztály · Történelem</a></div>
+
+<div class="screen active" id="scStart">
+  <div class="card start">
+    <span class="hero-icon">📜</span>
+    <div class="hero-title">Történelem_egy</div>
+    <div class="hero-sub">Mi a történelem? · Források · Régészet · Címer, zászló, pecsét<br><b>21 feladat</b> · minden körben más sorrendben</div>
+    <div class="types"><span>🔘 Feleletválasztós</span><span>✅❌ Igaz–hamis</span><span>✏️ Hiányzó szó</span><span>🔗 Párosítás</span><span>☑️ Több jó válasz</span><span>💡 Fogalomfelismerés</span></div>
+    <button class="btn-big" onclick="start()">🚀 Kezdjük!</button>
+  </div>
+</div>
+
+<div class="screen" id="scQuiz">
+  <div class="prog-row"><div class="prog-track"><div class="prog-fill" id="prog"></div></div><div class="prog-lbl" id="progLbl"></div></div>
+  <div class="chips"><div class="chip chip-g">✅ <span id="sG">0</span> helyes</div><div class="chip chip-r">❌ <span id="sR">0</span> hibás</div></div>
+  <div class="card">
+    <div class="type-badge" id="typeBadge"></div>
+    <div id="qHead"></div>
+    <div id="qBody"></div>
+    <div class="feedback" id="fb"></div>
+    <div class="expl" id="expl"></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-back" id="bBack" onclick="back()">◀ Vissza</button>
+    <button class="btn btn-skip" id="bSkip" onclick="skip()">⏭ Kihagyás</button>
+    <button class="btn btn-check" id="bMain" onclick="main()">✓ Ellenőrzés</button>
+  </div>
+</div>
+
+<div class="screen" id="scRes">
+  <div class="card res">
+    <span class="res-emoji" id="rEmoji"></span>
+    <div class="res-pct" id="rPct"></div>
+    <div class="res-msg" id="rMsg"></div>
+    <div class="res-stats">
+      <div class="stat stat-g"><b id="rG">0</b><span>helyes</span></div>
+      <div class="stat stat-r"><b id="rR">0</b><span>hibás / kihagyott</span></div>
+    </div>
+    <button class="btn-big" onclick="start()">🔄 Újra! (más sorrend)</button>
+    <a class="home" href="gyakorlas.html#tortenelem">🏠 Vissza a főoldalra</a>
+  </div>
+  <div id="wrongWrap"></div>
+</div>
+
+<script>
+const QUESTIONS=[{"type": "mc", "q": "Mi a történelem?", "options": ["A múltról való tanulás", "A jövő előrejelzése", "A csillagok tanulmányozása", "A növények vizsgálata"], "answer": 0, "expl": "💡 A történelem az emberiség vagy egy nép/nemzet életében történt fontosabb események sorozata."}, {"type": "mc", "q": "Melyik tudomány kutatja ásatások során a múltat?", "options": ["Régészet", "Földrajz", "Csillagászat", "Nyelvtan"], "answer": 0, "expl": "💡 A régész ásatásokon leleteket tár fel, és ezekből próbál minél többet megállapítani."}, {"type": "mc", "q": "Mire használták a pecsétet?", "options": ["Oklevelek, levelek, fontos iratok hitelesítésére", "A csatában a sereg vezetésére", "A nemesi családok pajzsának díszítésére", "Az évszakok jelzésére"], "answer": 0, "expl": "💡 A pecsétet oklevélre, levélre, hivatalos iratra tették – ez hitelesítette az iratot."}, {"type": "mc", "q": "Melyik tárgyi emlék?", "options": ["Harci sisak", "Petőfi naplója", "Egy eredetmonda", "Rákóczi emlékiratai"], "answer": 0, "expl": "💡 Tárgyi emlék pl. a cserépedény, a harci sisak, az ágyúgolyó."}, {"type": "tf", "q": "A cserépedény tárgyi emlék.", "answer": true, "expl": "💡 Igaz – a cserépedény kézzelfogható tárgy a múltból."}, {"type": "tf", "q": "Petőfi naplója a szájhagyomány körébe tartozik.", "answer": false, "expl": "💡 Hamis – a napló írott forrás."}, {"type": "tf", "q": "Kecskemét címerén kecske látható – ez árulkodó ábra.", "answer": true, "expl": "💡 Igaz – az árulkodó címer ábrája elárulja a nevet (Kecskemét → kecske)."}, {"type": "tf", "q": "A régész a leleten csak azt vizsgálja, milyen színű.", "answer": false, "expl": "💡 Hamis – vizsgálja a formát, az anyagot, a földréteget, a maradványokat, az írást, mintát is."}, {"type": "fill", "q": "A történelem forrásai segítenek megismerni a ___.", "answers": ["múltunkat", "múltat", "a múltunkat", "a múltat"], "expl": "💡 A források segítik megismerni a múltunkat."}, {"type": "fill", "q": "Az ásatások során előkerült tárgyakat ___ nevezzük.", "answers": ["leleteknek", "leletnek", "leletek", "lelet"], "expl": "💡 Az ásatáson talált tárgyak a leletek."}, {"type": "fill", "q": "A zászlót a csatában a ___ vitte.", "answers": ["zászlótartó", "zászlóvivő", "zászlós"], "expl": "💡 A zászlótartó szerepe nagyon fontos volt."}, {"type": "match", "q": "Párosítsd a jelképeket a szerepükkel!", "pairs": [["Címer", "Nemesi családok, lovagok jelképe"], ["Zászló", "Királyok, főurak jelképe"], ["Pecsét", "Oklevelet, levelet hitelesít"]], "expl": "💡 Címere és zászlaja országoknak is lehet (pl. Kossuth-címer, 1956)."}, {"type": "match", "q": "Melyik forrástípusba tartozik?", "pairs": [["Ágyúgolyó", "Tárgyi emlék"], ["Rákóczi emlékiratai", "Írott, képi forrás"], ["Eredetmonda", "Szájhagyomány, szokás, mese"]], "expl": "💡 A forrásoknak 3 csoportja van: tárgyi, írott/képi és szájhagyomány."}, {"type": "match", "q": "Mit vizsgál a régész? Párosítsd a kérdéssel!", "pairs": [["Anyag", "Miből készült?"], ["Földréteg", "Melyik rétegből került elő?"], ["Forma, alak", "Milyen alakú?"], ["Maradvány", "Van rajta állati vagy növényi nyom?"]]}, {"type": "multi", "q": "Melyek a történelmi források csoportjai?", "options": ["Tárgyi emlékek", "Írott, képi források", "Szájhagyomány, szokások, mesék", "Időjárás-előrejelzés", "Jövőbeli tervek"], "answers": [0, 1, 2], "expl": "💡 3 csoport: tárgyi emlékek · írott, képi források · szájhagyomány."}, {"type": "multi", "q": "Mit vizsgál a régész egy leleten?", "options": ["A formáját, alakját", "Az anyagát", "Melyik földrétegből való", "Mennyibe kerül ma a boltban", "Van-e rajta állati vagy növényi maradvány"], "answers": [0, 1, 2, 4]}, {"type": "multi", "q": "Kiknek lehetett címere?", "options": ["Nemesi családoknak", "Lovagoknak", "Országoknak", "Évszakoknak", "Csillagoknak"], "answers": [0, 1, 2], "expl": "💡 Városoknak is (pl. Kecskemét)!"}, {"type": "concept", "q": "Az emberiség vagy egy nép / nemzet életében történt fontosabb események sorozata.", "answers": ["történelem"]}, {"type": "concept", "q": "Az a tudomány, amely ásatások során kutatja a múltat.", "answers": ["régészet"]}, {"type": "concept", "q": "Oklevélre, levélre tett jel, amely hitelesíti a hivatalos iratot.", "answers": ["pecsét"]}, {"type": "concept", "q": "Nemesi családok, lovagok jelképe, amelyen gyakran árulkodó ábra van.", "answers": ["címer"]}];
+const LABEL={mc:'🔘 Feleletválasztós',tf:'✅❌ Igaz vagy hamis?',fill:'✏️ Írd be a hiányzó szót!',match:'🔗 Párosítsd össze!',multi:'☑️ Több helyes válasz is van!',concept:'💡 Fogalomfelismerés'};
+const STARS=['⭐','🌟','✨','💫','🎉','🏆','📜','🥳'];
+let order=[],idx=0,results=[],checked=false,cur=null;
+const $=id=>document.getElementById(id);
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function norm(s){return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[.,!?;:"'()]/g,'').replace(/\s+/g,' ').trim();}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');window.scrollTo(0,0);}
+function stars(el){const r=el.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+30;for(let i=0;i<8;i++){const s=document.createElement('div');s.className='star-p';s.textContent=STARS[Math.floor(Math.random()*STARS.length)];s.style.left=(x-70+Math.random()*140)+'px';s.style.top=(y-50+Math.random()*90)+'px';s.style.animationDelay=(Math.random()*.4)+'s';$('stars').appendChild(s);setTimeout(()=>s.remove(),1300);}}
+function score(){const g=results.filter(r=>r.ok).length;$('sG').textContent=g;$('sR').textContent=results.length-g;}
+
+function start(){order=shuffle(QUESTIONS.map((_,i)=>i));idx=0;results=[];score();show('scQuiz');render();}
+
+function render(){
+  const q=QUESTIONS[order[idx]];cur={q,sel:null,multi:new Set()};checked=false;
+  $('typeBadge').textContent=LABEL[q.type];
+  $('fb').className='feedback';$('fb').textContent='';
+  $('expl').className='expl';$('expl').textContent=q.expl||'';
+  const b=$('bMain');b.textContent='✓ Ellenőrzés';b.className='btn btn-check';
+  $('bBack').disabled=results.length===0;$('bSkip').disabled=false;
+  $('prog').style.width=(idx/order.length*100)+'%';$('progLbl').textContent=(idx+1)+'/'+order.length;
+  let head='',body='';
+  if(q.type==='mc'){
+    head=`<div class="q-text">${esc(q.q)}</div>`;
+    cur.opts=shuffle(q.options.map((t,i)=>({t,i})));
+    body='<div class="opts">'+cur.opts.map(o=>`<button class="opt" data-i="${o.i}" onclick="pick(this)"><span class="mark"></span>${esc(o.t)}</button>`).join('')+'</div>';
+  } else if(q.type==='tf'){
+    head=`<div class="q-text">Igaz vagy hamis az állítás?</div><div class="statement">„${esc(q.q)}”</div>`;
+    body='<div class="tf-row"><button class="opt" data-v="1" onclick="pickTF(this)">👍 IGAZ</button><button class="opt" data-v="0" onclick="pickTF(this)">👎 HAMIS</button></div>';
+  } else if(q.type==='fill'){
+    head=`<div class="q-text">${esc(q.q).replace('___','<span class="blank"></span>')}</div>`;
+    body='<input class="txt-input" id="txt" type="text" placeholder="írd ide..." autocomplete="off" spellcheck="false">';
+  } else if(q.type==='concept'){
+    head=`<div class="q-text">Melyik fogalomra illik a meghatározás?</div><div class="definition">${esc(q.q)}</div>`;
+    const a=q.answers[0];
+    body=`<input class="txt-input" id="txt" type="text" placeholder="a fogalom neve..." autocomplete="off" spellcheck="false"><button class="hint-btn" onclick="this.style.display='none';document.getElementById('hintTxt').textContent='Kezdőbetű: ${a[0].toUpperCase()} · ${a.length} betű'">💡 Segítség kérése</button><div class="hint-txt" id="hintTxt"></div>`;
+  } else if(q.type==='match'){
+    head=`<div class="q-text">${esc(q.q)}</div>`;
+    const rights=shuffle(q.pairs.map(p=>p[1]));
+    body=q.pairs.map((p,r)=>`<div class="m-row" id="mr${r}"><div class="m-left">${esc(p[0])}</div><select id="ms${r}"><option value="">– válassz –</option>${rights.map(x=>`<option>${esc(x)}</option>`).join('')}</select></div>`).join('');
+  } else if(q.type==='multi'){
+    head=`<div class="q-text">${esc(q.q)}</div>`;
+    cur.opts=shuffle(q.options.map((t,i)=>({t,i})));
+    body='<div class="opts">'+cur.opts.map(o=>`<button class="opt square" data-i="${o.i}" onclick="toggle(this)"><span class="mark"></span>${esc(o.t)}</button>`).join('')+'</div>';
+  }
+  $('qHead').innerHTML=head;$('qBody').innerHTML=body;
+  const t=$('txt');if(t){t.addEventListener('keydown',e=>{if(e.key==='Enter')main();});setTimeout(()=>t.focus(),60);}
+}
+function pick(el){if(checked)return;document.querySelectorAll('#qBody .opt').forEach(o=>{o.classList.remove('sel');o.querySelector('.mark').textContent='';});el.classList.add('sel');el.querySelector('.mark').textContent='●';cur.sel=+el.dataset.i;}
+function pickTF(el){if(checked)return;document.querySelectorAll('#qBody .opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');cur.sel=el.dataset.v==='1';}
+function toggle(el){if(checked)return;const i=+el.dataset.i;if(cur.multi.has(i)){cur.multi.delete(i);el.classList.remove('sel');el.querySelector('.mark').textContent='';}else{cur.multi.add(i);el.classList.add('sel');el.querySelector('.mark').textContent='✓';}}
+
+function correctText(q){
+  if(q.type==='mc')return q.options[q.answer];
+  if(q.type==='tf')return q.answer?'IGAZ':'HAMIS';
+  if(q.type==='fill'||q.type==='concept')return q.answers[0];
+  if(q.type==='match')return q.pairs.map(p=>p[0]+' → '+p[1]).join(' · ');
+  if(q.type==='multi')return q.answers.map(i=>q.options[i]).join(', ');
+}
+function qShort(q){return q.type==='tf'?'„'+q.q+'”':q.q;}
+
+function main(){if(checked){advance();return;}evaluate(false);}
+function skip(){if(checked){advance();return;}evaluate(true);}
+
+function evaluate(skipped){
+  const q=cur.q;let ok=false,user='(kihagyva)';
+  if(!skipped){
+    if((q.type==='mc'||q.type==='tf')&&cur.sel===null)return hint('Válassz egy választ! 😊');
+    if(q.type==='multi'&&cur.multi.size===0)return hint('Jelölj be legalább egy választ! 😊');
+    if((q.type==='fill'||q.type==='concept')&&!norm($('txt').value))return hint('Írd be a választ! 😊');
+    if(q.type==='match'&&q.pairs.some((_,r)=>!$('ms'+r).value))return hint('Minden sorhoz válassz párt! 😊');
+  }
+  if(q.type==='mc'){
+    if(!skipped){ok=cur.sel===q.answer;user=q.options[cur.sel];}
+    document.querySelectorAll('#qBody .opt').forEach(o=>{const i=+o.dataset.i;o.disabled=true;o.classList.remove('sel');if(i===q.answer){o.classList.add('ok');o.querySelector('.mark').textContent='✓';}else if(i===cur.sel){o.classList.add('ko');o.querySelector('.mark').textContent='✗';}});
+  } else if(q.type==='tf'){
+    if(!skipped){ok=cur.sel===q.answer;user=cur.sel?'IGAZ':'HAMIS';}
+    document.querySelectorAll('#qBody .opt').forEach(o=>{const v=o.dataset.v==='1';o.disabled=true;o.classList.remove('sel');if(v===q.answer)o.classList.add('ok');else if(!skipped&&v===cur.sel)o.classList.add('ko');});
+  } else if(q.type==='fill'||q.type==='concept'){
+    const t=$('txt');
+    if(!skipped){user=t.value.trim();ok=q.answers.some(a=>norm(a)===norm(user));}
+    t.disabled=true;t.classList.add(ok?'ok':'ko');
+  } else if(q.type==='match'){
+    let good=0;
+    q.pairs.forEach((p,r)=>{const s=$('ms'+r),row=$('mr'+r);s.disabled=true;if(!skipped&&s.value===p[1]){row.classList.add('ok');good++;}else{row.classList.add('ko');row.insertAdjacentHTML('beforeend',`<div class="m-fix">✓ Helyes pár: ${esc(p[1])}</div>`);}});
+    if(!skipped){ok=good===q.pairs.length;user=good+'/'+q.pairs.length+' pár helyes';}
+  } else if(q.type==='multi'){
+    const ans=new Set(q.answers);
+    if(!skipped){ok=ans.size===cur.multi.size&&[...ans].every(i=>cur.multi.has(i));user=[...cur.multi].map(i=>q.options[i]).join(', ');}
+    document.querySelectorAll('#qBody .opt').forEach(o=>{const i=+o.dataset.i,s=cur.multi.has(i);o.disabled=true;o.classList.remove('sel');if(ans.has(i)){o.classList.add(s?'ok':'miss');o.querySelector('.mark').textContent='✓';}else if(s){o.classList.add('ko');o.querySelector('.mark').textContent='✗';}});
+  }
+  checked=true;
+  const fb=$('fb');fb.classList.add('show');
+  if(ok){fb.classList.add('fb-ok');fb.textContent='🎉 Helyes! Szuper!';stars(fb);}
+  else{fb.classList.add('fb-ko');fb.textContent=(skipped?'⏭ Megoldás: ':'😅 Helyes válasz: ')+correctText(q);}
+  if(q.expl)$('expl').classList.add('show');
+  results.push({q,ok,user});score();
+  const b=$('bMain');b.textContent=idx+1>=order.length?'Eredmény 🏆':'Következő →';b.className='btn btn-next';
+  $('bSkip').disabled=true;$('bBack').disabled=false;
+}
+function hint(msg){const fb=$('fb');fb.className='feedback show fb-hint';fb.textContent=msg;}
+function advance(){idx++;if(idx>=order.length){finish();return;}render();window.scrollTo(0,0);}
+function back(){
+  if(checked){results.pop();score();render();return;}
+  if(results.length===0)return;
+  results.pop();idx--;score();render();
+}
+function finish(){
+  const g=results.filter(r=>r.ok).length,n=results.length,pct=Math.round(g/n*100);
+  $('rEmoji').textContent=pct===100?'🏆':pct>=80?'🥳':pct>=60?'😊':'💪';
+  $('rPct').textContent=pct+'%';
+  $('rMsg').textContent=pct===100?'Tökéletes! Igazi történész vagy!':pct>=80?'Nagyon jó! Büszke lehetsz!':pct>=60?'Szép munka! Még egy kicsit gyakorolj!':'Nézd át a füzetet és próbáld újra!';
+  $('rG').textContent=g;$('rR').textContent=n-g;
+  const w=results.filter(r=>!r.ok);
+  $('wrongWrap').innerHTML=w.length?'<div class="list-title">❌ Ezeket érdemes átnézni</div>'+w.map(r=>`<div class="w-item"><div class="w-q">${esc(qShort(r.q))}</div><div class="w-u">A te válaszod: ${esc(r.user)}</div><div class="w-c">Helyes: ${esc(correctText(r.q))}</div></div>`).join(''):'';
+  show('scRes');
+}
+</script>
+</body>
+</html>
