@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Környezet_2 🍇</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--a1:#65a30d;--a2:#3f6212;--green:#06d6a0;--green2:#05a880;--red:#ef476f;--red2:#c03057;--purple:#7b5ea7;--pink:#ff6b9d;--ink:#1a1040;--muted:#7a6f9a;}
+@keyframes pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes starfly{0%{transform:scale(0) rotate(0deg);opacity:1}100%{transform:scale(1.8) rotate(60deg);opacity:0}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+html,body{min-height:100%;font-family:'Segoe UI',system-ui,sans-serif;}
+body{background:linear-gradient(135deg,#f7fee7 0%,#ecfccb 45%,#fef3c7 100%);min-height:100vh;padding:1rem;display:flex;flex-direction:column;align-items:center;}
+.stars-wrap{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:999;}
+.star-p{position:absolute;font-size:24px;animation:starfly 1s ease-out forwards;}
+.top-bar{width:100%;max-width:560px;padding:.5rem 0 1.25rem;text-align:center;}
+.top-bar a{font-size:14px;font-weight:700;color:var(--a2);letter-spacing:.04em;text-decoration:none;}
+.screen{display:none;width:100%;max-width:560px;}
+.screen.active{display:block;animation:fadeUp .3s ease;}
+.card{background:#fff;border-radius:28px;box-shadow:0 8px 40px rgba(60,40,120,.13);padding:2rem 1.5rem;margin-bottom:1rem;}
+.start{text-align:center;}
+.hero-icon{font-size:72px;display:block;animation:bounce 2.2s infinite;margin-bottom:.5rem;}
+.hero-title{font-size:30px;font-weight:900;color:var(--ink);margin-bottom:.4rem;}
+.hero-sub{font-size:15px;color:var(--muted);margin-bottom:1.25rem;line-height:1.6;}
+.types{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:1.5rem;}
+.types span{background:#f4f1ff;color:var(--purple);border-radius:99px;padding:5px 12px;font-size:12px;font-weight:700;}
+.btn-big{display:block;width:100%;background:linear-gradient(135deg,var(--a1),var(--a2));color:#fff;border:none;border-radius:18px;padding:17px;font-size:19px;font-weight:900;cursor:pointer;box-shadow:0 4px 22px rgba(0,0,0,.15);transition:transform .15s;}
+.btn-big:hover{transform:translateY(-2px);}
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.prog-track{flex:1;height:14px;background:rgba(255,255,255,.7);border-radius:99px;overflow:hidden;box-shadow:inset 0 2px 5px rgba(0,0,0,.1);}
+.prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--a1),var(--a2));transition:width .5s;}
+.prog-lbl{font-size:14px;font-weight:800;color:var(--a2);min-width:48px;text-align:right;}
+.chips{display:flex;gap:8px;margin-bottom:1rem;}
+.chip{border-radius:99px;padding:6px 15px;font-size:14px;font-weight:800;}
+.chip-g{background:#d1faf0;color:var(--green2);}.chip-r{background:#ffe4ec;color:var(--red2);}
+.type-badge{display:inline-block;background:linear-gradient(90deg,var(--a1),var(--a2));color:#fff;border-radius:99px;padding:5px 14px;font-size:12px;font-weight:800;margin-bottom:1rem;}
+.q-text{font-size:20px;font-weight:800;color:var(--ink);line-height:1.4;margin-bottom:1.25rem;}
+.q-text .blank{display:inline-block;min-width:80px;border-bottom:3px dashed var(--a1);margin:0 4px;}
+.statement,.definition{background:#f8f6ff;border-left:5px solid var(--a1);border-radius:12px;padding:14px 16px;font-size:18px;font-weight:700;color:var(--ink);line-height:1.45;margin-bottom:1.25rem;}
+.definition{font-style:italic;}
+.opts{display:flex;flex-direction:column;gap:10px;}
+.opt{text-align:left;border:3px solid #ebe6ff;background:#fbfaff;border-radius:16px;padding:13px 16px;font-size:16px;font-weight:700;color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s;display:flex;align-items:center;gap:10px;}
+.opt:hover:not(:disabled){border-color:var(--a1);}
+.opt .mark{flex-shrink:0;width:26px;height:26px;border-radius:50%;border:3px solid #cfc7f5;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.opt.square .mark{border-radius:7px;}
+.opt.sel{border-color:var(--a1);background:#fff;}
+.opt.sel .mark{background:var(--a1);border-color:var(--a1);color:#fff;}
+.opt.ok{border-color:var(--green);background:#d1faf0;}
+.opt.ok .mark{background:var(--green);border-color:var(--green);color:#fff;}
+.opt.ko{border-color:var(--red);background:#ffe4ec;}
+.opt.ko .mark{background:var(--red);border-color:var(--red);color:#fff;}
+.opt.miss{border-color:var(--green);border-style:dashed;}
+.opt:disabled{cursor:default;}
+.tf-row{display:flex;gap:12px;}
+.tf-row .opt{flex:1;justify-content:center;font-size:19px;padding:18px;}
+.txt-input{width:100%;border:3px solid #ebe6ff;border-radius:16px;background:#fbfaff;color:var(--ink);font-size:20px;font-weight:800;text-align:center;padding:14px;outline:none;}
+.txt-input:focus{border-color:var(--a1);background:#fff;}
+.txt-input.ok{border-color:var(--green);background:#d1faf0;color:var(--green2);}
+.txt-input.ko{border-color:var(--red);background:#ffe4ec;color:var(--red2);}
+.hint-btn{margin-top:10px;background:#fff8e1;border:2px solid #ffe082;color:#8a6d00;border-radius:12px;padding:7px 14px;font-size:13px;font-weight:800;cursor:pointer;}
+.hint-txt{margin-top:8px;font-size:14px;font-weight:700;color:#8a6d00;}
+.m-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border:3px solid #ebe6ff;border-radius:16px;margin-bottom:10px;background:#fbfaff;flex-wrap:wrap;}
+.m-left{flex:1 1 140px;font-weight:800;color:var(--ink);font-size:16px;}
+.m-row select{flex:1 1 180px;border:2px solid #d9d2ff;border-radius:12px;padding:10px;font-size:15px;font-weight:700;color:var(--ink);background:#fff;}
+.m-row.ok{border-color:var(--green);background:#d1faf0;}
+.m-row.ko{border-color:var(--red);background:#ffe4ec;}
+.m-fix{width:100%;font-size:13px;font-weight:800;color:var(--green2);}
+.feedback{margin-top:1rem;font-size:16px;font-weight:800;border-radius:12px;padding:8px 14px;display:none;}
+.feedback.show{display:block;}
+.fb-ok{background:#d1faf0;color:var(--green2);}.fb-ko{background:#ffe4ec;color:var(--red2);}.fb-hint{background:#f4f1ff;color:var(--purple);}
+.expl{margin-top:10px;background:#fffbe6;border:2px solid #ffe082;border-radius:14px;padding:10px 14px;font-size:14px;color:#6b5500;font-weight:600;display:none;line-height:1.45;}
+.expl.show{display:block;}
+.btn-row{display:flex;gap:8px;}
+.btn{flex:1;border:none;border-radius:16px;font-size:14px;font-weight:800;padding:14px 8px;cursor:pointer;}
+.btn:disabled{opacity:.3;cursor:not-allowed;}
+.btn-back{background:#ede9ff;color:var(--purple);}
+.btn-skip{background:#fff0fa;color:var(--pink);}
+.btn-check{background:linear-gradient(135deg,var(--a1),var(--a2));color:#fff;}
+.btn-next{background:linear-gradient(135deg,var(--green),#00b4d8);color:#fff;animation:pulse 1.5s infinite;}
+.res{text-align:center;}
+.res-emoji{font-size:68px;display:block;animation:pop .5s;}
+.res-pct{font-size:56px;font-weight:900;background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.res-msg{font-size:19px;font-weight:800;color:var(--ink);margin:.25rem 0 1.25rem;}
+.res-stats{display:flex;gap:12px;margin-bottom:1.25rem;}
+.stat{flex:1;border-radius:18px;padding:1rem;}
+.stat b{font-size:32px;display:block;}
+.stat span{font-size:12px;font-weight:700;}
+.stat-g{background:#d1faf0;color:var(--green2);}.stat-r{background:#ffe4ec;color:var(--red2);}
+.list-title{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 8px 4px;}
+.w-item{background:#fff;border-radius:16px;padding:12px 14px;margin-bottom:8px;box-shadow:0 3px 12px rgba(60,40,120,.07);font-size:14px;line-height:1.45;}
+.w-q{font-weight:800;color:var(--ink);margin-bottom:4px;}
+.w-u{color:var(--red2);font-weight:700;}
+.w-c{color:var(--green2);font-weight:800;}
+.home{display:block;text-align:center;margin-top:.75rem;font-weight:800;color:var(--a2);text-decoration:none;}
+.q-img{background:#f7fbf4;border:2px solid #e3f1d9;border-radius:18px;padding:10px;margin-bottom:1rem;text-align:center;}
+.q-img svg{width:100%;max-width:340px;height:auto;display:block;margin:0 auto;}
+.emoji-big{font-size:100px;line-height:1.15;}
+</style>
+</head>
+<body>
+<div class="stars-wrap" id="stars"></div>
+<div class="top-bar"><a href="gyakorlas.html#kornyezet">⬅ Főoldal &nbsp;·&nbsp; 5. osztály · Környezet</a></div>
+
+<div class="screen active" id="scStart">
+  <div class="card start">
+    <span class="hero-icon">🍇</span>
+    <div class="hero-title">Környezet_2</div>
+    <div class="hero-sub">Dió · Csonthéjas gyümölcsfák · Szőlő · Paprika<br><b>36 feladat</b> · minden körben más sorrendben</div>
+    <div class="types"><span>🔘 Feleletválasztós</span><span>✅❌ Igaz–hamis</span><span>✏️ Hiányzó szó</span><span>🔗 Párosítás</span><span>☑️ Több jó válasz</span><span>💡 Fogalomfelismerés</span><span>🖼️ Képfelismerés</span></div>
+    <button class="btn-big" onclick="start()">🚀 Kezdjük!</button>
+  </div>
+</div>
+
+<div class="screen" id="scQuiz">
+  <div class="prog-row"><div class="prog-track"><div class="prog-fill" id="prog"></div></div><div class="prog-lbl" id="progLbl"></div></div>
+  <div class="chips"><div class="chip chip-g">✅ <span id="sG">0</span> helyes</div><div class="chip chip-r">❌ <span id="sR">0</span> hibás</div></div>
+  <div class="card">
+    <div class="type-badge" id="typeBadge"></div>
+    <div id="qHead"></div>
+    <div id="qBody"></div>
+    <div class="feedback" id="fb"></div>
+    <div class="expl" id="expl"></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-back" id="bBack" onclick="back()">◀ Vissza</button>
+    <button class="btn btn-skip" id="bSkip" onclick="skip()">⏭ Kihagyás</button>
+    <button class="btn btn-check" id="bMain" onclick="main()">✓ Ellenőrzés</button>
+  </div>
+</div>
+
+<div class="screen" id="scRes">
+  <div class="card res">
+    <span class="res-emoji" id="rEmoji"></span>
+    <div class="res-pct" id="rPct"></div>
+    <div class="res-msg" id="rMsg"></div>
+    <div class="res-stats">
+      <div class="stat stat-g"><b id="rG">0</b><span>helyes</span></div>
+      <div class="stat stat-r"><b id="rR">0</b><span>hibás / kihagyott</span></div>
+    </div>
+    <button class="btn-big" onclick="start()">🔄 Újra! (más sorrend)</button>
+    <a class="home" href="gyakorlas.html#kornyezet">🏠 Vissza a főoldalra</a>
+  </div>
+  <div id="wrongWrap"></div>
+</div>
+
+<script>
+const QUESTIONS=[{"type": "mc", "q": "Hány levélkéből áll a diófa összetett levele?", "options": ["7–9", "2–3", "12–15", "Csak 1"], "answer": 0}, {"type": "mc", "q": "Hogyan jut el a diófa virágpora a termős virágokra?", "options": ["A szél szállítja", "Rovarok viszik", "A víz sodorja", "Madarak viszik"], "answer": 0, "expl": "💡 A diófa szélbeporzású növény."}, {"type": "mc", "q": "Meddig élhet egy diófa?", "options": ["100–120 évig", "10–15 évig", "30–40 évig", "1000 évig"], "answer": 0, "expl": "💡 Ezért mondjuk: „A diófát nem magunknak, hanem unokáinknak ültetjük.”"}, {"type": "mc", "q": "Miért nem szabad bottal verni a diófa ágait?", "options": ["Tönkretehetjük a jövő évi termést hozó fiatal hajtásokat", "Megsérül tőle a dió héja", "Elszárad tőle a fa gyökere", "Lehullanak a levelek"], "answer": 0}, {"type": "mc", "q": "Miért nevezzük a szőlőt cserjének?", "options": ["Mert nincs törzse, fás szára a tőből ágazik el", "Mert lágy szárú növény", "Mert egyéves növény", "Mert bogyótermése van"], "answer": 0}, {"type": "mc", "q": "Honnan származik a paprika?", "options": ["Amerika meleg éghajlatú tájairól", "Ázsiából", "Afrikából", "Ausztráliából"], "answer": 0}, {"type": "mc", "q": "Ki vont ki először C-vitamint a paprikából a szegedi egyetemen?", "options": ["Szent-Györgyi Albert", "Semmelweis Ignác", "Petőfi Sándor", "Kossuth Lajos"], "answer": 0, "expl": "💡 Ezért és további munkáiért Nobel-díjat kapott."}, {"type": "tf", "q": "A dióbél hétszer táplálóbb, mint a marhahús.", "answer": true, "expl": "💡 Sok benne a fehérje és az olaj, gazdag B-vitaminokban."}, {"type": "tf", "q": "A szőlő gyökérzete sekélyen, a talaj felszíne közelében terül el.", "answer": false, "expl": "💡 Mélyen hatol a talajba, ezért a tartós szárazságot is jól tűri."}, {"type": "tf", "q": "A paprika sekélyen gyökerezik.", "answer": true}, {"type": "tf", "q": "A paprika szára egész életében fás és kemény.", "answer": false, "expl": "💡 Lágy, puha és nedvdús, csak időskorában fásodik el."}, {"type": "tf", "q": "A lisztharmat ellen kénporozással védekeznek.", "answer": true}, {"type": "tf", "q": "A diófa már 1–2 éves korában bőven terem.", "answer": false, "expl": "💡 Későn, 5–8 éves kora között hoz először termést."}, {"type": "fill", "q": "A szőlő kapaszkodó szára a ___.", "answers": ["kacs", "kacsok"]}, {"type": "fill", "q": "A szőlő édes, kipréselt leve a ___.", "answers": ["must"]}, {"type": "fill", "q": "A paprika élete tavasztól őszig tart, ezért ___ növény.", "answers": ["egyéves", "egynyári"]}, {"type": "fill", "q": "A szőlő vaskos, fás szárrésze, amelyből a vesszők kihajtanak, a ___.", "answers": ["szőlőtőke", "tőke"]}, {"type": "match", "q": "Mikor érik? Párosítsd!", "pairs": [["Cseresznye", "Májustól június végéig"], ["Meggy", "Amikor a cseresznye leérőben van"], ["Ceglédi óriás kajszibarack", "Július közepén"], ["Besztercei szilva", "Szeptemberben"]]}, {"type": "match", "q": "Párosítsd a betegséget a jellemzőjével!", "pairs": [["Peronoszpóra", "Meleg, párás időben támad, a levelek elszíneződnek, elszáradnak"], ["Lisztharmat", "Lisztszerű, fehér bevonat a növényen"], ["Monília", "Penészvánkosok, múmiává töppedő gyümölcs"]]}, {"type": "match", "q": "Hogyan hasznosítjuk a diófa részeit?", "pairs": [["Magja (dióbél)", "Nyersen, ételekben, tésztákban"], ["Levele, termésfala", "Festék- és gyógyszeripar"], ["Fája", "Értékes bútorfa"]]}, {"type": "multi", "q": "Melyek a diófa jellemzői?", "options": ["Vaskos, zömök törzs, sima, szürke kéreg", "Összetett levél", "Szélbeporzású", "Csonthéjas termés", "Lándzsa alakú levél", "Bogyótermés", "Rózsaszín virág"], "answers": [0, 1, 2, 3]}, {"type": "multi", "q": "Melyek a szőlőnövény jellemzői?", "options": ["Kacsokkal kapaszkodó cserje", "Mélyre hatoló gyökérzet", "Fás szár (tőke és vesszők)", "Fürtös virágzat és termés", "Lágy szárú, egyéves", "Csonthéjas termés"], "answers": [0, 1, 2, 3]}, {"type": "multi", "q": "Mit igényel a paprika?", "options": ["Sok napfényt", "Meleget", "Sok vizet", "Laza, jó tápanyagtartalmú talajt", "Hideg, árnyékos helyet", "Száraz, köves talajt"], "answers": [0, 1, 2, 3]}, {"type": "multi", "q": "Melyek paprikafajták?", "options": ["Kápia", "Fűszerpaprika", "Almapaprika", "Paradicsompaprika", "Csemegepaprika", "Besztercei", "Ceglédi óriás"], "answers": [0, 1, 2, 3, 4]}, {"type": "concept", "q": "Olyan lágy szárú növény, amelynek élete csak tavasztól őszig tart (pl. a paprika).", "answers": ["egyéves növény", "egyéves", "egynyári növény", "egynyári"]}, {"type": "concept", "q": "A szőlő legveszedelmesebb gombakártevője, főleg meleg, párás időben támad.", "answers": ["peronoszpóra"]}, {"type": "concept", "q": "Nagy szemű, ropogós húsú szőlő, amelyet gyümölcsként fogyasztunk.", "answers": ["csemegeszőlő"]}, {"type": "concept", "q": "Olyan termés, amelynek belsejében erekkel részekre osztott üreg alakul ki (pl. paprika).", "answers": ["felfújt bogyótermés", "felfújt bogyó"]}, {"type": "concept", "q": "A dió csonthéjas termésének magja, amelyet megeszünk.", "answers": ["dióbél"]}, {"type": "mc", "img": "<svg viewBox=\"0 0 320 250\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"160\" y1=\"242\" x2=\"160\" y2=\"42\" stroke=\"#15803d\" stroke-width=\"4\"/><ellipse cx=\"110\" cy=\"185\" rx=\"44\" ry=\"16\" transform=\"rotate(25 110 185)\" fill=\"#22c55e\" stroke=\"#15803d\" stroke-width=\"2\"/><ellipse cx=\"210\" cy=\"185\" rx=\"44\" ry=\"16\" transform=\"rotate(-25 210 185)\" fill=\"#22c55e\" stroke=\"#15803d\" stroke-width=\"2\"/><ellipse cx=\"110\" cy=\"130\" rx=\"44\" ry=\"16\" transform=\"rotate(25 110 130)\" fill=\"#22c55e\" stroke=\"#15803d\" stroke-width=\"2\"/><ellipse cx=\"210\" cy=\"130\" rx=\"44\" ry=\"16\" transform=\"rotate(-25 210 130)\" fill=\"#22c55e\" stroke=\"#15803d\" stroke-width=\"2\"/><ellipse cx=\"110\" cy=\"80\" rx=\"44\" ry=\"16\" transform=\"rotate(25 110 80)\" fill=\"#22c55e\" stroke=\"#15803d\" stroke-width=\"2\"/><ellipse cx=\"210\" cy=\"80\" rx=\"44\" ry=\"16\" transform=\"rotate(-25 210 80)\" fill=\"#22c55e\" stroke=\"#15803d\" stroke-width=\"2\"/><ellipse cx=\"160\" cy=\"42\" rx=\"16\" ry=\"36\" fill=\"#22c55e\" stroke=\"#15803d\" stroke-width=\"2\"/><line x1=\"30\" y1=\"58\" x2=\"88\" y2=\"120\" stroke=\"#1a1040\" stroke-width=\"1.6\"/><circle cx=\"88\" cy=\"120\" r=\"3.5\" fill=\"#1a1040\"/><circle cx=\"30\" cy=\"58\" r=\"12\" fill=\"#1a1040\"/><text x=\"30\" y=\"63\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#fff\" font-family=\"Arial\">1</text><line x1=\"290\" y1=\"228\" x2=\"162\" y2=\"228\" stroke=\"#1a1040\" stroke-width=\"1.6\"/><circle cx=\"162\" cy=\"228\" r=\"3.5\" fill=\"#1a1040\"/><circle cx=\"290\" cy=\"228\" r=\"12\" fill=\"#1a1040\"/><text x=\"290\" y=\"233\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#fff\" font-family=\"Arial\">2</text></svg>", "q": "Ez a diófa levele. Hogyan nevezzük az ilyen levelet?", "options": ["Összetett levél", "Lándzsa alakú levél", "Tojásdad levél", "Tűlevél"], "answer": 0, "expl": "💡 1 levélke · 2 levélnyél – a diófa levele 7–9 levélkéből áll."}, {"type": "mc", "img": "<svg viewBox=\"0 0 320 250\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"18\" width=\"320\" height=\"232\" fill=\"#f3e2c7\"/><rect x=\"0\" y=\"0\" width=\"320\" height=\"18\" fill=\"#bbf7d0\"/><line x1=\"160\" y1=\"0\" x2=\"160\" y2=\"20\" stroke=\"#16a34a\" stroke-width=\"8\"/><path d=\"M150 18 L170 18 L163 240 L157 240 Z\" fill=\"#a16207\"/><path d=\"M162 55 Q110 65 55 100\" stroke=\"#a16207\" stroke-width=\"4\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M158 55 Q210 65 265 95\" stroke=\"#a16207\" stroke-width=\"4\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M161 105 Q115 120 70 160\" stroke=\"#a16207\" stroke-width=\"4\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M159 105 Q205 120 250 155\" stroke=\"#a16207\" stroke-width=\"4\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M160 155 Q125 170 95 205\" stroke=\"#a16207\" stroke-width=\"4\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M160 155 Q195 170 228 200\" stroke=\"#a16207\" stroke-width=\"4\" fill=\"none\" stroke-linecap=\"round\"/><line x1=\"290\" y1=\"232\" x2=\"162\" y2=\"215\" stroke=\"#1a1040\" stroke-width=\"1.6\"/><circle cx=\"162\" cy=\"215\" r=\"3.5\" fill=\"#1a1040\"/><circle cx=\"290\" cy=\"232\" r=\"12\" fill=\"#1a1040\"/><text x=\"290\" y=\"237\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#fff\" font-family=\"Arial\">1</text><line x1=\"28\" y1=\"50\" x2=\"77\" y2=\"87\" stroke=\"#1a1040\" stroke-width=\"1.6\"/><circle cx=\"77\" cy=\"87\" r=\"3.5\" fill=\"#1a1040\"/><circle cx=\"28\" cy=\"50\" r=\"12\" fill=\"#1a1040\"/><text x=\"28\" y=\"55\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#fff\" font-family=\"Arial\">2</text></svg>", "q": "A paprika gyökérzete. Mit jelöl a 2-es szám?", "options": ["Oldalgyökér", "Főgyökér", "Szár", "Kacs"], "answer": 0, "expl": "💡 A fő- és oldalgyökerekből álló gyökérzet a főgyökérzet."}, {"type": "match", "img": "<svg viewBox=\"0 0 320 250\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M156 42 L156 18 Q156 10 168 8\" stroke=\"#15803d\" stroke-width=\"7\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M160 40 C 230 45 245 110 225 170 C 210 215 180 235 160 235 C 140 235 110 215 95 170 C 75 110 90 45 160 40 Z\" fill=\"#16a34a\" stroke=\"#14532d\" stroke-width=\"3\"/><path d=\"M160 58 C 215 62 225 115 208 165 C 196 200 175 218 160 218 C 145 218 124 200 112 165 C 95 115 105 62 160 58 Z\" fill=\"#ecfccb\"/><line x1=\"160\" y1=\"100\" x2=\"160\" y2=\"210\" stroke=\"#fde68a\" stroke-width=\"5\"/><ellipse cx=\"160\" cy=\"88\" rx=\"30\" ry=\"18\" fill=\"#fef9c3\" stroke=\"#ca8a04\" stroke-width=\"2\"/><circle cx=\"135\" cy=\"97\" r=\"4\" fill=\"#fde68a\" stroke=\"#a16207\"/><circle cx=\"146\" cy=\"105\" r=\"4\" fill=\"#fde68a\" stroke=\"#a16207\"/><circle cx=\"160\" cy=\"108\" r=\"4\" fill=\"#fde68a\" stroke=\"#a16207\"/><circle cx=\"174\" cy=\"105\" r=\"4\" fill=\"#fde68a\" stroke=\"#a16207\"/><circle cx=\"185\" cy=\"97\" r=\"4\" fill=\"#fde68a\" stroke=\"#a16207\"/><circle cx=\"153\" cy=\"135\" r=\"4\" fill=\"#fde68a\" stroke=\"#a16207\"/><circle cx=\"167\" cy=\"150\" r=\"4\" fill=\"#fde68a\" stroke=\"#a16207\"/><circle cx=\"153\" cy=\"165\" r=\"4\" fill=\"#fde68a\" stroke=\"#a16207\"/><circle cx=\"167\" cy=\"180\" r=\"4\" fill=\"#fde68a\" stroke=\"#a16207\"/><line x1=\"25\" y1=\"95\" x2=\"92\" y2=\"120\" stroke=\"#1a1040\" stroke-width=\"1.6\"/><circle cx=\"92\" cy=\"120\" r=\"3.5\" fill=\"#1a1040\"/><circle cx=\"25\" cy=\"95\" r=\"12\" fill=\"#1a1040\"/><text x=\"25\" y=\"100\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#fff\" font-family=\"Arial\">1</text><line x1=\"25\" y1=\"190\" x2=\"104\" y2=\"172\" stroke=\"#1a1040\" stroke-width=\"1.6\"/><circle cx=\"104\" cy=\"172\" r=\"3.5\" fill=\"#1a1040\"/><circle cx=\"25\" cy=\"190\" r=\"12\" fill=\"#1a1040\"/><text x=\"25\" y=\"195\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#fff\" font-family=\"Arial\">2</text><line x1=\"295\" y1=\"60\" x2=\"188\" y2=\"88\" stroke=\"#1a1040\" stroke-width=\"1.6\"/><circle cx=\"188\" cy=\"88\" r=\"3.5\" fill=\"#1a1040\"/><circle cx=\"295\" cy=\"60\" r=\"12\" fill=\"#1a1040\"/><text x=\"295\" y=\"65\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#fff\" font-family=\"Arial\">3</text><line x1=\"295\" y1=\"140\" x2=\"192\" y2=\"140\" stroke=\"#1a1040\" stroke-width=\"1.6\"/><circle cx=\"192\" cy=\"140\" r=\"3.5\" fill=\"#1a1040\"/><circle cx=\"295\" cy=\"140\" r=\"12\" fill=\"#1a1040\"/><text x=\"295\" y=\"145\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#fff\" font-family=\"Arial\">4</text><line x1=\"295\" y1=\"215\" x2=\"162\" y2=\"200\" stroke=\"#1a1040\" stroke-width=\"1.6\"/><circle cx=\"162\" cy=\"200\" r=\"3.5\" fill=\"#1a1040\"/><circle cx=\"295\" cy=\"215\" r=\"12\" fill=\"#1a1040\"/><text x=\"295\" y=\"220\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#fff\" font-family=\"Arial\">5</text></svg>", "q": "A paprika felfújt bogyótermése. Párosítsd a számokat!", "pairs": [["1-es", "héj"], ["2-es", "hús"], ["3-as", "magtanya"], ["4-es", "üreg"], ["5-ös", "ér"]]}, {"type": "match", "img": "<svg viewBox=\"0 0 320 250\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0\" y=\"170\" width=\"320\" height=\"80\" fill=\"#ecd3ad\"/><path d=\"M160 182 L160 245\" stroke=\"#92400e\" stroke-width=\"3\" fill=\"none\"/><path d=\"M160 195 Q125 205 105 235\" stroke=\"#92400e\" stroke-width=\"3\" fill=\"none\"/><path d=\"M160 195 Q195 205 215 235\" stroke=\"#92400e\" stroke-width=\"3\" fill=\"none\"/><path d=\"M160 215 Q140 225 130 245\" stroke=\"#92400e\" stroke-width=\"3\" fill=\"none\"/><path d=\"M160 215 Q180 225 190 245\" stroke=\"#92400e\" stroke-width=\"3\" fill=\"none\"/><path d=\"M145 155 Q125 100 110 48\" stroke=\"#92400e\" stroke-width=\"5\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M158 150 Q160 95 152 38\" stroke=\"#92400e\" stroke-width=\"5\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M172 152 Q190 100 205 55\" stroke=\"#92400e\" stroke-width=\"5\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M185 158 Q220 120 240 82\" stroke=\"#92400e\" stroke-width=\"5\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M128 176 Q124 150 145 152 Q160 140 175 152 Q196 150 192 176 Z\" fill=\"#78350f\"/><g transform=\"translate(100,45)\"><path d=\"M0,30 L-25,20 L-35,-5 L-15,-5 L-20,-30 L0,-15 L20,-30 L15,-5 L35,-5 L25,20 Z\" fill=\"#4ade80\" stroke=\"#15803d\" stroke-width=\"2\"/></g><g transform=\"translate(248,76)\"><path d=\"M0,30 L-25,20 L-35,-5 L-15,-5 L-20,-30 L0,-15 L20,-30 L15,-5 L35,-5 L25,20 Z\" fill=\"#4ade80\" stroke=\"#15803d\" stroke-width=\"2\"/></g><path d=\"M152 40 q 15 -8 22 2 q 5 10 -5 12 q -8 0 -5 -8\" stroke=\"#65a30d\" stroke-width=\"3\" fill=\"none\"/><line x1=\"30\" y1=\"28\" x2=\"92\" y2=\"45\" stroke=\"#1a1040\" stroke-width=\"1.6\"/><circle cx=\"92\" cy=\"45\" r=\"3.5\" fill=\"#1a1040\"/><circle cx=\"30\" cy=\"28\" r=\"12\" fill=\"#1a1040\"/><text x=\"30\" y=\"33\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#fff\" font-family=\"Arial\">1</text><line x1=\"290\" y1=\"22\" x2=\"176\" y2=\"42\" stroke=\"#1a1040\" stroke-width=\"1.6\"/><circle cx=\"176\" cy=\"42\" r=\"3.5\" fill=\"#1a1040\"/><circle cx=\"290\" cy=\"22\" r=\"12\" fill=\"#1a1040\"/><text x=\"290\" y=\"27\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#fff\" font-family=\"Arial\">2</text><line x1=\"295\" y1=\"135\" x2=\"216\" y2=\"120\" stroke=\"#1a1040\" stroke-width=\"1.6\"/><circle cx=\"216\" cy=\"120\" r=\"3.5\" fill=\"#1a1040\"/><circle cx=\"295\" cy=\"135\" r=\"12\" fill=\"#1a1040\"/><text x=\"295\" y=\"140\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#fff\" font-family=\"Arial\">3</text><line x1=\"30\" y1=\"160\" x2=\"132\" y2=\"166\" stroke=\"#1a1040\" stroke-width=\"1.6\"/><circle cx=\"132\" cy=\"166\" r=\"3.5\" fill=\"#1a1040\"/><circle cx=\"30\" cy=\"160\" r=\"12\" fill=\"#1a1040\"/><text x=\"30\" y=\"165\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#fff\" font-family=\"Arial\">4</text><line x1=\"295\" y1=\"228\" x2=\"207\" y2=\"226\" stroke=\"#1a1040\" stroke-width=\"1.6\"/><circle cx=\"207\" cy=\"226\" r=\"3.5\" fill=\"#1a1040\"/><circle cx=\"295\" cy=\"228\" r=\"12\" fill=\"#1a1040\"/><text x=\"295\" y=\"233\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#fff\" font-family=\"Arial\">5</text></svg>", "q": "A szőlőnövény. Párosítsd a számokat a részekkel!", "pairs": [["1-es", "levél"], ["2-es", "kacs"], ["3-as", "vessző"], ["4-es", "szőlőtőke"], ["5-ös", "gyökérzet"]]}, {"type": "mc", "img": "<svg viewBox=\"0 0 320 250\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"160\" y1=\"42\" x2=\"160\" y2=\"12\" stroke=\"#65a30d\" stroke-width=\"6\" stroke-linecap=\"round\"/><circle cx=\"160\" cy=\"138\" r=\"96\" fill=\"#84cc16\"/><circle cx=\"160\" cy=\"138\" r=\"89\" fill=\"#d9f99d\"/><ellipse cx=\"145\" cy=\"138\" rx=\"11\" ry=\"22\" transform=\"rotate(-15 145 138)\" fill=\"#a16207\"/><ellipse cx=\"175\" cy=\"138\" rx=\"11\" ry=\"22\" transform=\"rotate(15 175 138)\" fill=\"#a16207\"/><line x1=\"28\" y1=\"45\" x2=\"96\" y2=\"72\" stroke=\"#1a1040\" stroke-width=\"1.6\"/><circle cx=\"96\" cy=\"72\" r=\"3.5\" fill=\"#1a1040\"/><circle cx=\"28\" cy=\"45\" r=\"12\" fill=\"#1a1040\"/><text x=\"28\" y=\"50\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#fff\" font-family=\"Arial\">1</text><line x1=\"295\" y1=\"60\" x2=\"215\" y2=\"100\" stroke=\"#1a1040\" stroke-width=\"1.6\"/><circle cx=\"215\" cy=\"100\" r=\"3.5\" fill=\"#1a1040\"/><circle cx=\"295\" cy=\"60\" r=\"12\" fill=\"#1a1040\"/><text x=\"295\" y=\"65\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#fff\" font-family=\"Arial\">2</text><line x1=\"295\" y1=\"215\" x2=\"178\" y2=\"152\" stroke=\"#1a1040\" stroke-width=\"1.6\"/><circle cx=\"178\" cy=\"152\" r=\"3.5\" fill=\"#1a1040\"/><circle cx=\"295\" cy=\"215\" r=\"12\" fill=\"#1a1040\"/><text x=\"295\" y=\"220\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#fff\" font-family=\"Arial\">3</text></svg>", "q": "A szőlőszem (1 héj, 2 gyümölcshús, 3 mag). Milyen termés ez?", "options": ["Bogyótermés", "Csonthéjas termés", "Felfújt bogyótermés", "Tobozos termés"], "answer": 0}, {"type": "mc", "img": "<div class=\"emoji-big\">🍒</div>", "q": "Milyen termése van a cseresznyének?", "options": ["Csonthéjas termés", "Bogyótermés", "Felfújt bogyótermés", "Összetett fürt"], "answer": 0}, {"type": "mc", "img": "<div class=\"emoji-big\">🌶️</div>", "q": "Melyik vitaminban különösen gazdag a paprika termése?", "options": ["C-vitamin", "D-vitamin", "K-vitamin", "E-vitamin"], "answer": 0}];
+const LABEL={mc:'🔘 Feleletválasztós',tf:'✅❌ Igaz vagy hamis?',fill:'✏️ Írd be a hiányzó szót!',match:'🔗 Párosítsd össze!',multi:'☑️ Több helyes válasz is van!',concept:'💡 Fogalomfelismerés'};
+const STARS=['⭐','🌟','✨','💫','🎉','🏆','🌱','🥳'];
+let order=[],idx=0,results=[],checked=false,cur=null;
+const $=id=>document.getElementById(id);
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function norm(s){return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[.,!?;:"'()]/g,'').replace(/\s+/g,' ').trim();}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');window.scrollTo(0,0);}
+function stars(el){const r=el.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+30;for(let i=0;i<8;i++){const s=document.createElement('div');s.className='star-p';s.textContent=STARS[Math.floor(Math.random()*STARS.length)];s.style.left=(x-70+Math.random()*140)+'px';s.style.top=(y-50+Math.random()*90)+'px';s.style.animationDelay=(Math.random()*.4)+'s';$('stars').appendChild(s);setTimeout(()=>s.remove(),1300);}}
+function score(){const g=results.filter(r=>r.ok).length;$('sG').textContent=g;$('sR').textContent=results.length-g;}
+
+function start(){order=shuffle(QUESTIONS.map((_,i)=>i));idx=0;results=[];score();show('scQuiz');render();}
+
+function render(){
+  const q=QUESTIONS[order[idx]];cur={q,sel:null,multi:new Set()};checked=false;
+  $('typeBadge').textContent=q.img?'🖼️ Képfelismerés':LABEL[q.type];
+  $('fb').className='feedback';$('fb').textContent='';
+  $('expl').className='expl';$('expl').textContent=q.expl||'';
+  const b=$('bMain');b.textContent='✓ Ellenőrzés';b.className='btn btn-check';
+  $('bBack').disabled=results.length===0;$('bSkip').disabled=false;
+  $('prog').style.width=(idx/order.length*100)+'%';$('progLbl').textContent=(idx+1)+'/'+order.length;
+  let head='',body='';const img=q.img?'<div class="q-img">'+q.img+'</div>':'';
+  if(q.type==='mc'){
+    head=`<div class="q-text">${esc(q.q)}</div>`;
+    cur.opts=shuffle(q.options.map((t,i)=>({t,i})));
+    body='<div class="opts">'+cur.opts.map(o=>`<button class="opt" data-i="${o.i}" onclick="pick(this)"><span class="mark"></span>${esc(o.t)}</button>`).join('')+'</div>';
+  } else if(q.type==='tf'){
+    head=`<div class="q-text">Igaz vagy hamis az állítás?</div><div class="statement">„${esc(q.q)}”</div>`;
+    body='<div class="tf-row"><button class="opt" data-v="1" onclick="pickTF(this)">👍 IGAZ</button><button class="opt" data-v="0" onclick="pickTF(this)">👎 HAMIS</button></div>';
+  } else if(q.type==='fill'){
+    head=`<div class="q-text">${esc(q.q).replace('___','<span class="blank"></span>')}</div>`;
+    body='<input class="txt-input" id="txt" type="text" placeholder="írd ide..." autocomplete="off" spellcheck="false">';
+  } else if(q.type==='concept'){
+    head=`<div class="q-text">Melyik fogalomra illik a meghatározás?</div><div class="definition">${esc(q.q)}</div>`;
+    const a=q.answers[0];
+    body=`<input class="txt-input" id="txt" type="text" placeholder="a fogalom neve..." autocomplete="off" spellcheck="false"><button class="hint-btn" onclick="this.style.display='none';document.getElementById('hintTxt').textContent='Kezdőbetű: ${a[0].toUpperCase()} · ${a.length} betű'">💡 Segítség kérése</button><div class="hint-txt" id="hintTxt"></div>`;
+  } else if(q.type==='match'){
+    head=`<div class="q-text">${esc(q.q)}</div>`;
+    const rights=shuffle(q.pairs.map(p=>p[1]));
+    body=q.pairs.map((p,r)=>`<div class="m-row" id="mr${r}"><div class="m-left">${esc(p[0])}</div><select id="ms${r}"><option value="">– válassz –</option>${rights.map(x=>`<option>${esc(x)}</option>`).join('')}</select></div>`).join('');
+  } else if(q.type==='multi'){
+    head=`<div class="q-text">${esc(q.q)}</div>`;
+    cur.opts=shuffle(q.options.map((t,i)=>({t,i})));
+    body='<div class="opts">'+cur.opts.map(o=>`<button class="opt square" data-i="${o.i}" onclick="toggle(this)"><span class="mark"></span>${esc(o.t)}</button>`).join('')+'</div>';
+  }
+  $('qHead').innerHTML=img+head;$('qBody').innerHTML=body;
+  const t=$('txt');if(t){t.addEventListener('keydown',e=>{if(e.key==='Enter')main();});setTimeout(()=>t.focus(),60);}
+}
+function pick(el){if(checked)return;document.querySelectorAll('#qBody .opt').forEach(o=>{o.classList.remove('sel');o.querySelector('.mark').textContent='';});el.classList.add('sel');el.querySelector('.mark').textContent='●';cur.sel=+el.dataset.i;}
+function pickTF(el){if(checked)return;document.querySelectorAll('#qBody .opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');cur.sel=el.dataset.v==='1';}
+function toggle(el){if(checked)return;const i=+el.dataset.i;if(cur.multi.has(i)){cur.multi.delete(i);el.classList.remove('sel');el.querySelector('.mark').textContent='';}else{cur.multi.add(i);el.classList.add('sel');el.querySelector('.mark').textContent='✓';}}
+
+function correctText(q){
+  if(q.type==='mc')return q.options[q.answer];
+  if(q.type==='tf')return q.answer?'IGAZ':'HAMIS';
+  if(q.type==='fill'||q.type==='concept')return q.answers[0];
+  if(q.type==='match')return q.pairs.map(p=>p[0]+' → '+p[1]).join(' · ');
+  if(q.type==='multi')return q.answers.map(i=>q.options[i]).join(', ');
+}
+function qShort(q){return (q.img?'🖼️ ':'')+(q.type==='tf'?'„'+q.q+'”':q.q);}
+
+function main(){if(checked){advance();return;}evaluate(false);}
+function skip(){if(checked){advance();return;}evaluate(true);}
+
+function evaluate(skipped){
+  const q=cur.q;let ok=false,user='(kihagyva)';
+  if(!skipped){
+    if((q.type==='mc'||q.type==='tf')&&cur.sel===null)return hint('Válassz egy választ! 😊');
+    if(q.type==='multi'&&cur.multi.size===0)return hint('Jelölj be legalább egy választ! 😊');
+    if((q.type==='fill'||q.type==='concept')&&!norm($('txt').value))return hint('Írd be a választ! 😊');
+    if(q.type==='match'&&q.pairs.some((_,r)=>!$('ms'+r).value))return hint('Minden sorhoz válassz párt! 😊');
+  }
+  if(q.type==='mc'){
+    if(!skipped){ok=cur.sel===q.answer;user=q.options[cur.sel];}
+    document.querySelectorAll('#qBody .opt').forEach(o=>{const i=+o.dataset.i;o.disabled=true;o.classList.remove('sel');if(i===q.answer){o.classList.add('ok');o.querySelector('.mark').textContent='✓';}else if(i===cur.sel){o.classList.add('ko');o.querySelector('.mark').textContent='✗';}});
+  } else if(q.type==='tf'){
+    if(!skipped){ok=cur.sel===q.answer;user=cur.sel?'IGAZ':'HAMIS';}
+    document.querySelectorAll('#qBody .opt').forEach(o=>{const v=o.dataset.v==='1';o.disabled=true;o.classList.remove('sel');if(v===q.answer)o.classList.add('ok');else if(!skipped&&v===cur.sel)o.classList.add('ko');});
+  } else if(q.type==='fill'||q.type==='concept'){
+    const t=$('txt');
+    if(!skipped){user=t.value.trim();ok=q.answers.some(a=>norm(a)===norm(user));}
+    t.disabled=true;t.classList.add(ok?'ok':'ko');
+  } else if(q.type==='match'){
+    let good=0;
+    q.pairs.forEach((p,r)=>{const s=$('ms'+r),row=$('mr'+r);s.disabled=true;if(!skipped&&s.value===p[1]){row.classList.add('ok');good++;}else{row.classList.add('ko');row.insertAdjacentHTML('beforeend',`<div class="m-fix">✓ Helyes pár: ${esc(p[1])}</div>`);}});
+    if(!skipped){ok=good===q.pairs.length;user=good+'/'+q.pairs.length+' pár helyes';}
+  } else if(q.type==='multi'){
+    const ans=new Set(q.answers);
+    if(!skipped){ok=ans.size===cur.multi.size&&[...ans].every(i=>cur.multi.has(i));user=[...cur.multi].map(i=>q.options[i]).join(', ');}
+    document.querySelectorAll('#qBody .opt').forEach(o=>{const i=+o.dataset.i,s=cur.multi.has(i);o.disabled=true;o.classList.remove('sel');if(ans.has(i)){o.classList.add(s?'ok':'miss');o.querySelector('.mark').textContent='✓';}else if(s){o.classList.add('ko');o.querySelector('.mark').textContent='✗';}});
+  }
+  checked=true;
+  const fb=$('fb');fb.classList.add('show');
+  if(ok){fb.classList.add('fb-ok');fb.textContent='🎉 Helyes! Szuper!';stars(fb);}
+  else{fb.classList.add('fb-ko');fb.textContent=(skipped?'⏭ Megoldás: ':'😅 Helyes válasz: ')+correctText(q);}
+  if(q.expl)$('expl').classList.add('show');
+  results.push({q,ok,user});score();
+  const b=$('bMain');b.textContent=idx+1>=order.length?'Eredmény 🏆':'Következő →';b.className='btn btn-next';
+  $('bSkip').disabled=true;$('bBack').disabled=false;
+}
+function hint(msg){const fb=$('fb');fb.className='feedback show fb-hint';fb.textContent=msg;}
+function advance(){idx++;if(idx>=order.length){finish();return;}render();window.scrollTo(0,0);}
+function back(){
+  if(checked){results.pop();score();render();return;}
+  if(results.length===0)return;
+  results.pop();idx--;score();render();
+}
+function finish(){
+  const g=results.filter(r=>r.ok).length,n=results.length,pct=Math.round(g/n*100);
+  $('rEmoji').textContent=pct===100?'🏆':pct>=80?'🥳':pct>=60?'😊':'💪';
+  $('rPct').textContent=pct+'%';
+  $('rMsg').textContent=pct===100?'Tökéletes! Igazi természetbúvár vagy!':pct>=80?'Nagyon jó! Büszke lehetsz!':pct>=60?'Szép munka! Még egy kicsit gyakorolj!':'Nézd át a füzetet és próbáld újra!';
+  $('rG').textContent=g;$('rR').textContent=n-g;
+  const w=results.filter(r=>!r.ok);
+  $('wrongWrap').innerHTML=w.length?'<div class="list-title">❌ Ezeket érdemes átnézni</div>'+w.map(r=>`<div class="w-item"><div class="w-q">${esc(qShort(r.q))}</div><div class="w-u">A te válaszod: ${esc(r.user)}</div><div class="w-c">Helyes: ${esc(correctText(r.q))}</div></div>`).join(''):'';
+  show('scRes');
+}
+</script>
+</body>
+</html>
