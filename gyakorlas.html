@@ -88,11 +88,13 @@ body{
 .section-title.hist span{background:linear-gradient(90deg,#f59e0b,#0f766e);}
 .grid{margin-bottom:2.5rem;}
 .grade-badge{display:inline-block;background:linear-gradient(90deg,#7b5ea7,#3a86ff);color:#fff;border-radius:99px;padding:6px 20px;font-size:14px;font-weight:800;margin-top:.9rem;}
-.tabs{display:flex;gap:10px;width:100%;max-width:520px;margin:0 0 1.75rem;background:rgba(255,255,255,.6);padding:6px;border-radius:20px;box-shadow:0 4px 18px rgba(100,60,200,.1);}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:520px;margin:0 0 1.75rem;background:rgba(255,255,255,.6);padding:6px;border-radius:20px;box-shadow:0 4px 18px rgba(100,60,200,.1);}
 .tab{flex:1;border:none;border-radius:15px;padding:13px 6px;font-size:15px;font-weight:900;cursor:pointer;background:transparent;color:#7a6f9a;transition:background .2s,color .2s,transform .1s;font-family:inherit;}
 .tab:active{transform:scale(.97);}
 .tab.active{background:#fff;color:#1a1040;box-shadow:0 3px 12px rgba(100,60,200,.18);}
 .tab.active.t-en{background:linear-gradient(135deg,#3a86ff,#7b5ea7);color:#fff;}
+.tab.active.t-lit{background:linear-gradient(135deg,#8b5cf6,#5b21b6);color:#fff;}
+.section-title.lit span{background:linear-gradient(90deg,#8b5cf6,#5b21b6);}
 .tab.active.t-env{background:linear-gradient(135deg,#ec4899,#65a30d);color:#fff;}
 .section-title.env span{background:linear-gradient(90deg,#ec4899,#65a30d);}
 .tab.active.t-hist{background:linear-gradient(135deg,#f59e0b,#0f766e);color:#fff;}
@@ -116,6 +118,7 @@ body{
   <button class="tab t-en" data-p="angol" onclick="showTab('angol')">🇬🇧 Angol</button>
   <button class="tab t-hist" data-p="tortenelem" onclick="showTab('tortenelem')">🏛️ Történelem</button>
   <button class="tab t-env" data-p="kornyezet" onclick="showTab('kornyezet')">🌱 Környezet</button>
+  <button class="tab t-lit" data-p="irodalom" onclick="showTab('irodalom')">📖 Irodalom</button>
 </div>
 
 <div class="panel" id="p-angol">
@@ -225,13 +228,25 @@ body{
     <span class="card-emoji">🍇</span>
     <div class="card-title">Környezet_2</div>
     <div class="card-sub">dió, csonthéjasok, szőlő, paprika</div>
-    <span class="card-badge" style="background:linear-gradient(135deg,#65a30d,#3f6212)">36 feladat</span>
+    <span class="card-badge" style="background:linear-gradient(135deg,#65a30d,#3f6212)">40 feladat</span>
+  </a>
+</div>
+</div>
+
+<div class="panel" id="p-irodalom">
+<div class="section-title lit"><span>5. osztály</span> 📖 Irodalom</div>
+<div class="grid">
+  <a class="card" href="irodalom_1.html" style="animation-delay:.05s">
+    <span class="card-emoji">📖</span>
+    <div class="card-title">Irodalom_1</div>
+    <div class="card-sub">műnemek, műfajok, nép- és műköltészet, rímek, Családi kör</div>
+    <span class="card-badge" style="background:linear-gradient(135deg,#8b5cf6,#5b21b6)">36 feladat</span>
   </a>
 </div>
 </div>
 
 <div class="footer">
-  🌟 Minden feladatsor újra kitölthető, véletlenszerű sorrendben 🌟
+  🌟 Minden feladatsor újra kitölthető, véletlenszerű sorrendben 🌟<br><small>Frissítve: 2026.09.26.</small>
 </div>
 
 <script>
@@ -240,7 +255,7 @@ function showTab(p){
   document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.p===p));
   history.replaceState(null,'','#'+p);
 }
-const _h=location.hash.slice(1);showTab(['angol','tortenelem','kornyezet'].includes(_h)?_h:'angol');
+const _h=location.hash.slice(1);showTab(['angol','tortenelem','kornyezet','irodalom'].includes(_h)?_h:'angol');
 </script>
 </body>
 </html>

@@ -156,6 +156,8 @@ function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.re
 function stars(el){const r=el.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+30;for(let i=0;i<8;i++){const s=document.createElement('div');s.className='star-p';s.textContent=STARS[Math.floor(Math.random()*STARS.length)];s.style.left=(x-70+Math.random()*140)+'px';s.style.top=(y-50+Math.random()*90)+'px';s.style.animationDelay=(Math.random()*.4)+'s';$('stars').appendChild(s);setTimeout(()=>s.remove(),1300);}}
 function score(){const g=results.filter(r=>r.ok).length;$('sG').textContent=g;$('sR').textContent=results.length-g;}
 
+function hunLen(w){return (w.match(/dzs|cs|dz|gy|ly|ny|sz|ty|zs|./gi)||[]).length;}
+function hintFor(a){const ws=a.trim().split(/\s+/);const f=a.match(/dzs|cs|dz|gy|ly|ny|sz|ty|zs|./i)[0];const F=f.charAt(0).toUpperCase()+f.slice(1);return 'Kezdőbetű: '+F+' · '+(ws.length>1?ws.length+' szó ('+ws.map(hunLen).join(' + ')+' betű)':hunLen(a)+' betű');}
 function start(){order=shuffle(QUESTIONS.map((_,i)=>i));idx=0;results=[];score();show('scQuiz');render();}
 
 function render(){
@@ -180,13 +182,13 @@ function render(){
   } else if(q.type==='concept'){
     head=`<div class="q-text">Melyik fogalomra illik a meghatározás?</div><div class="definition">${esc(q.q)}</div>`;
     const a=q.answers[0];
-    body=`<input class="txt-input" id="txt" type="text" placeholder="a fogalom neve..." autocomplete="off" spellcheck="false"><button class="hint-btn" onclick="this.style.display='none';document.getElementById('hintTxt').textContent='Kezdőbetű: ${a[0].toUpperCase()} · ${a.length} betű'">💡 Segítség kérése</button><div class="hint-txt" id="hintTxt"></div>`;
+    body=`<input class="txt-input" id="txt" type="text" placeholder="a fogalom neve..." autocomplete="off" spellcheck="false"><button class="hint-btn" onclick="this.style.display='none';document.getElementById('hintTxt').textContent=hintFor(cur.q.answers[0])">💡 Segítség kérése</button><div class="hint-txt" id="hintTxt"></div>`;
   } else if(q.type==='match'){
     head=`<div class="q-text">${esc(q.q)}</div>`;
     const rights=shuffle(q.pairs.map(p=>p[1]));
     body=q.pairs.map((p,r)=>`<div class="m-row" id="mr${r}"><div class="m-left">${esc(p[0])}</div><select id="ms${r}"><option value="">– válassz –</option>${rights.map(x=>`<option>${esc(x)}</option>`).join('')}</select></div>`).join('');
   } else if(q.type==='multi'){
-    head=`<div class="q-text">${esc(q.q)}</div>`;
+    head=`<div class="q-text">${esc(q.q)} <span style="color:var(--a2);font-size:15px;white-space:nowrap">(${q.answers.length} jó válasz)</span></div>`;
     cur.opts=shuffle(q.options.map((t,i)=>({t,i})));
     body='<div class="opts">'+cur.opts.map(o=>`<button class="opt square" data-i="${o.i}" onclick="toggle(this)"><span class="mark"></span>${esc(o.t)}</button>`).join('')+'</div>';
   }
@@ -225,7 +227,7 @@ function evaluate(skipped){
     document.querySelectorAll('#qBody .opt').forEach(o=>{const v=o.dataset.v==='1';o.disabled=true;o.classList.remove('sel');if(v===q.answer)o.classList.add('ok');else if(!skipped&&v===cur.sel)o.classList.add('ko');});
   } else if(q.type==='fill'||q.type==='concept'){
     const t=$('txt');
-    if(!skipped){user=t.value.trim();ok=q.answers.some(a=>norm(a)===norm(user));}
+    if(!skipped){user=t.value.trim();ok=q.answers.some(a=>{const A=norm(a),U=norm(user);return U===A||(A.length>=4&&(' '+U+' ').includes(' '+A+' '));});}
     t.disabled=true;t.classList.add(ok?'ok':'ko');
   } else if(q.type==='match'){
     let good=0;

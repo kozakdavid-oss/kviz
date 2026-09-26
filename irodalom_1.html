@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Történelem_egy 📜</title>
+<title>Irodalom_1 📖</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-:root{--a1:#f59e0b;--a2:#b45309;--green:#06d6a0;--green2:#05a880;--red:#ef476f;--red2:#c03057;--purple:#7b5ea7;--pink:#ff6b9d;--ink:#1a1040;--muted:#7a6f9a;}
+:root{--a1:#8b5cf6;--a2:#5b21b6;--green:#06d6a0;--green2:#05a880;--red:#ef476f;--red2:#c03057;--purple:#7b5ea7;--pink:#ff6b9d;--ink:#1a1040;--muted:#7a6f9a;}
 @keyframes pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @keyframes starfly{0%{transform:scale(0) rotate(0deg);opacity:1}100%{transform:scale(1.8) rotate(60deg);opacity:0}}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
 html,body{min-height:100%;font-family:'Segoe UI',system-ui,sans-serif;}
-body{background:linear-gradient(135deg,#fff7e6 0%,#fdebd3 50%,#f3e8ff 100%);min-height:100vh;padding:1rem;display:flex;flex-direction:column;align-items:center;}
+body{background:linear-gradient(135deg,#f5f3ff 0%,#ede9fe 45%,#fef3c7 100%);min-height:100vh;padding:1rem;display:flex;flex-direction:column;align-items:center;}
 .stars-wrap{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:999;}
 .star-p{position:absolute;font-size:24px;animation:starfly 1s ease-out forwards;}
 .top-bar{width:100%;max-width:560px;padding:.5rem 0 1.25rem;text-align:center;}
@@ -95,18 +95,24 @@ body{background:linear-gradient(135deg,#fff7e6 0%,#fdebd3 50%,#f3e8ff 100%);min-
 .w-u{color:var(--red2);font-weight:700;}
 .w-c{color:var(--green2);font-weight:800;}
 .home{display:block;text-align:center;margin-top:.75rem;font-weight:800;color:var(--a2);text-decoration:none;}
+.q-img{background:#f7fbf4;border:2px solid #e3f1d9;border-radius:18px;padding:10px;margin-bottom:1rem;text-align:center;}
+.q-img svg{width:100%;max-width:340px;height:auto;display:block;margin:0 auto;}
+.emoji-big{font-size:100px;line-height:1.15;}
+.verse{font-family:Georgia,serif;font-size:18px;line-height:1.75;text-align:left;display:inline-block;font-style:italic;color:#1a1040;padding:6px 8px;}
+.verse .who{font-style:normal;font-weight:800;}
+.verse .dir{font-style:italic;color:#7a6f9a;}
 </style>
 </head>
 <body>
 <div class="stars-wrap" id="stars"></div>
-<div class="top-bar"><a href="gyakorlas.html#tortenelem">⬅ Főoldal &nbsp;·&nbsp; 5. osztály · Történelem</a></div>
+<div class="top-bar"><a href="gyakorlas.html#irodalom">⬅ Főoldal &nbsp;·&nbsp; 5. osztály · Irodalom</a></div>
 
 <div class="screen active" id="scStart">
   <div class="card start">
-    <span class="hero-icon">📜</span>
-    <div class="hero-title">Történelem_egy</div>
-    <div class="hero-sub">Mi a történelem? · Források · Régészet · Címer, zászló, pecsét<br><b>21 feladat</b> · minden körben más sorrendben</div>
-    <div class="types"><span>🔘 Feleletválasztós</span><span>✅❌ Igaz–hamis</span><span>✏️ Hiányzó szó</span><span>🔗 Párosítás</span><span>☑️ Több jó válasz</span><span>💡 Fogalomfelismerés</span></div>
+    <span class="hero-icon">📖</span>
+    <div class="hero-title">Irodalom_1</div>
+    <div class="hero-sub">Műnemek és műfajok · Vers és próza · Nép- és műköltészet · Rímek · Családi kör<br><b>36 feladat</b> · minden körben más sorrendben</div>
+    <div class="types"><span>🔘 Feleletválasztós</span><span>✅❌ Igaz–hamis</span><span>✏️ Hiányzó szó</span><span>🔗 Párosítás</span><span>☑️ Több jó válasz</span><span>💡 Fogalomfelismerés</span><span>📝 Rím- és szövegfelismerés</span></div>
     <button class="btn-big" onclick="start()">🚀 Kezdjük!</button>
   </div>
 </div>
@@ -138,15 +144,15 @@ body{background:linear-gradient(135deg,#fff7e6 0%,#fdebd3 50%,#f3e8ff 100%);min-
       <div class="stat stat-r"><b id="rR">0</b><span>hibás / kihagyott</span></div>
     </div>
     <button class="btn-big" onclick="start()">🔄 Újra! (más sorrend)</button>
-    <a class="home" href="gyakorlas.html#tortenelem">🏠 Vissza a főoldalra</a>
+    <a class="home" href="gyakorlas.html#irodalom">🏠 Vissza a főoldalra</a>
   </div>
   <div id="wrongWrap"></div>
 </div>
 
 <script>
-const QUESTIONS=[{"type": "mc", "q": "Mi a történelem?", "options": ["A múltról való tanulás", "A jövő előrejelzése", "A csillagok tanulmányozása", "A növények vizsgálata"], "answer": 0, "expl": "💡 A történelem az emberiség vagy egy nép/nemzet életében történt fontosabb események sorozata."}, {"type": "mc", "q": "Melyik tudomány kutatja ásatások során a múltat?", "options": ["Régészet", "Földrajz", "Csillagászat", "Nyelvtan"], "answer": 0, "expl": "💡 A régész ásatásokon leleteket tár fel, és ezekből próbál minél többet megállapítani."}, {"type": "mc", "q": "Mire használták a pecsétet?", "options": ["Oklevelek, levelek, fontos iratok hitelesítésére", "A csatában a sereg vezetésére", "A nemesi családok pajzsának díszítésére", "Az évszakok jelzésére"], "answer": 0, "expl": "💡 A pecsétet oklevélre, levélre, hivatalos iratra tették – ez hitelesítette az iratot."}, {"type": "mc", "q": "Melyik tárgyi emlék?", "options": ["Harci sisak", "Petőfi naplója", "Egy eredetmonda", "Rákóczi emlékiratai"], "answer": 0, "expl": "💡 Tárgyi emlék pl. a cserépedény, a harci sisak, az ágyúgolyó."}, {"type": "tf", "q": "A cserépedény tárgyi emlék.", "answer": true, "expl": "💡 Igaz – a cserépedény kézzelfogható tárgy a múltból."}, {"type": "tf", "q": "Petőfi naplója a szájhagyomány körébe tartozik.", "answer": false, "expl": "💡 Hamis – a napló írott forrás."}, {"type": "tf", "q": "Kecskemét címerén kecske látható – ez árulkodó ábra.", "answer": true, "expl": "💡 Igaz – az árulkodó címer ábrája elárulja a nevet (Kecskemét → kecske)."}, {"type": "tf", "q": "A régész a leleten csak azt vizsgálja, milyen színű.", "answer": false, "expl": "💡 Hamis – vizsgálja a formát, az anyagot, a földréteget, a maradványokat, az írást, mintát is."}, {"type": "fill", "q": "A történelem forrásai segítenek megismerni a ___.", "answers": ["múltunkat", "múltat", "a múltunkat", "a múltat"], "expl": "💡 A források segítik megismerni a múltunkat."}, {"type": "fill", "q": "Az ásatások során előkerült tárgyakat ___ nevezzük.", "answers": ["leleteknek", "leletnek", "leletek", "lelet"], "expl": "💡 Az ásatáson talált tárgyak a leletek."}, {"type": "fill", "q": "A zászlót a csatában a ___ vitte.", "answers": ["zászlótartó", "zászlóvivő", "zászlós"], "expl": "💡 A zászlótartó szerepe nagyon fontos volt."}, {"type": "match", "q": "Párosítsd a jelképeket a szerepükkel!", "pairs": [["Címer", "Nemesi családok, lovagok jelképe"], ["Zászló", "Királyok, főurak jelképe"], ["Pecsét", "Oklevelet, levelet hitelesít"]], "expl": "💡 Címere és zászlaja országoknak is lehet (pl. Kossuth-címer, 1956)."}, {"type": "match", "q": "Melyik forrástípusba tartozik?", "pairs": [["Ágyúgolyó", "Tárgyi emlék"], ["Rákóczi emlékiratai", "Írott, képi forrás"], ["Eredetmonda", "Szájhagyomány, szokás, mese"]], "expl": "💡 A forrásoknak 3 csoportja van: tárgyi, írott/képi és szájhagyomány."}, {"type": "match", "q": "Mit vizsgál a régész? Párosítsd a kérdéssel!", "pairs": [["Anyag", "Miből készült?"], ["Földréteg", "Melyik rétegből került elő?"], ["Forma, alak", "Milyen alakú?"], ["Maradvány", "Van rajta állati vagy növényi nyom?"]]}, {"type": "multi", "q": "Melyek a történelmi források csoportjai?", "options": ["Tárgyi emlékek", "Írott, képi források", "Szájhagyomány, szokások, mesék", "Időjárás-előrejelzés", "Jövőbeli tervek"], "answers": [0, 1, 2], "expl": "💡 3 csoport: tárgyi emlékek · írott, képi források · szájhagyomány."}, {"type": "multi", "q": "Mit vizsgál a régész egy leleten?", "options": ["A formáját, alakját", "Az anyagát", "Melyik földrétegből való", "Mennyibe kerül ma a boltban", "Van-e rajta állati vagy növényi maradvány"], "answers": [0, 1, 2, 4]}, {"type": "multi", "q": "Kiknek lehetett címere?", "options": ["Nemesi családoknak", "Lovagoknak", "Országoknak", "Évszakoknak", "Csillagoknak"], "answers": [0, 1, 2], "expl": "💡 Városoknak is (pl. Kecskemét)!"}, {"type": "concept", "q": "Az emberiség vagy egy nép / nemzet életében történt fontosabb események sorozata.", "answers": ["történelem"]}, {"type": "concept", "q": "Az a tudomány, amely ásatások során kutatja a múltat.", "answers": ["régészet"]}, {"type": "concept", "q": "Oklevélre, levélre tett jel, amely hitelesíti a hivatalos iratot.", "answers": ["pecsét"]}, {"type": "concept", "q": "Nemesi családok, lovagok jelképe, amelyen gyakran árulkodó ábra van.", "answers": ["címer"]}];
+const QUESTIONS=[{"type": "mc", "q": "Mi a műnem?", "options": ["Az irodalmi alkotások alapvető csoportosítási rendszere, tartalmuk és formájuk alapján", "Egy vers versszakainak száma", "Az író neve és születési éve", "Egy regény fejezeteinek címe"], "answer": 0}, {"type": "mc", "q": "Melyik műnemre jellemző, hogy érzelmeket fejez ki, és személyes (E/1-ben szól)?", "options": ["Líra", "Epika", "Dráma", "Próza"], "answer": 0}, {"type": "mc", "q": "Melyik műnem középpontjában áll konfliktus, és melyiket szánták színpadra?", "options": ["Dráma", "Líra", "Epika", "Vers"], "answer": 0}, {"type": "mc", "q": "Melyik műnem mond el egy történetet helyszínnel, szereplőkkel?", "options": ["Epika", "Líra", "Dráma", "Rím"], "answer": 0}, {"type": "mc", "q": "Mi Arany János Családi kör című versének műfaja?", "options": ["Életkép", "Mese", "Tragédia", "Regény"], "answer": 0}, {"type": "mc", "q": "Mi a páros rím képlete?", "options": ["aabb", "abab", "abba", "aaaa"], "answer": 0}, {"type": "mc", "q": "Melyik rím képlete abba?", "options": ["Ölelkező rím", "Keresztrím", "Bokorrím", "Félrím"], "answer": 0, "expl": "💡 Az 1. és a 4. sor „körbeöleli” a 2. és 3. rímelő sort."}, {"type": "tf", "q": "A népköltészeti alkotások szerzője ismert.", "answer": false, "expl": "💡 A népköltészeti alkotás szerzője ismeretlen, közösségi alkotás."}, {"type": "tf", "q": "A próza folyamatos íráskép, bekezdésekre és fejezetekre tagolódik.", "answer": true}, {"type": "tf", "q": "A drámában a szereplők jellemét, gondolatait és a korábbi eseményeket párbeszédekből ismerjük meg.", "answer": true}, {"type": "tf", "q": "Keresztrímnél az 1. sor a 2. sorral rímel.", "answer": false, "expl": "💡 Keresztrím (abab): az 1. a 3.-kal, a 2. a 4.-kel rímel."}, {"type": "tf", "q": "A Családi kör keretes szerkezetű: az első és az utolsó versszak hasonló vagy egyforma.", "answer": true}, {"type": "tf", "q": "A műköltészeti alkotás szövege szájhagyomány útján folyton változik.", "answer": false, "expl": "💡 A műköltészeti alkotás szövege állandó, írásban terjed, nyomtatott formájú."}, {"type": "fill", "q": "A vers verssorokból és ___ áll.", "answers": ["versszakokból", "versszakok", "versszak", "versszakból"]}, {"type": "fill", "q": "A népköltészeti alkotás ___ útján terjed.", "answers": ["szájhagyomány"]}, {"type": "fill", "q": "A félrím képlete: ___", "answers": ["xaxa", "x a x a"], "expl": "💡 Csak a sorok fele rímel, általában a páros számú sorok."}, {"type": "fill", "q": "A drámát jelenetekre és ___ osztják.", "answers": ["felvonásokra", "felvonás", "felvonások"]}, {"type": "match", "q": "Párosítsd a műnemeket a műfajokkal!", "pairs": [["Líra", "Dal, elégia, tájleíró vers"], ["Dráma", "Tragédia, komédia, tragikomédia"], ["Epika", "Mese, regény, novella"]]}, {"type": "match", "q": "Párosítsd a rímeket a képletükkel!", "pairs": [["Páros rím", "aabb"], ["Keresztrím", "abab"], ["Ölelkező rím", "abba"], ["Bokorrím", "aaaa"], ["Félrím", "xaxa"]]}, {"type": "match", "q": "Családi kör – párosítsd a fogalmakat!", "pairs": [["Életkép", "A mindennapi élet egy jellemző helyzetét ábrázolja"], ["Idill", "Boldogságot, derűs, érzelmes jelenetet ábrázol"], ["Keretes szerkezet", "Az első és az utolsó versszak hasonló vagy egyforma"]]}, {"type": "multi", "q": "Melyek a líra jellemzői?", "options": ["Érzelmeket fejez ki", "Személyes (E/1)", "Hangulatot ábrázol", "Formája: vers", "Középpontjában konfliktus áll", "Színpadra szánták"], "answers": [0, 1, 2, 3]}, {"type": "multi", "q": "Melyek a népköltészeti alkotás jellemzői?", "options": ["Szerzője ismeretlen", "Közösségi alkotás", "Szövege változik", "Szájhagyomány útján terjed", "Nyomtatott formájú", "Szerzője ismert"], "answers": [0, 1, 2, 3]}, {"type": "multi", "q": "Melyek epikai műfajok?", "options": ["Mese", "Regény", "Novella", "Elégia", "Tragédia", "Dal"], "answers": [0, 1, 2]}, {"type": "multi", "q": "Melyek a vers jellemzői?", "options": ["Verssorok, versszakok", "Rímes", "Kötött ritmusú", "Folyamatos íráskép", "Kötetlen ritmusú", "Fejezetekre tagolódik"], "answers": [0, 1, 2]}, {"type": "concept", "q": "A vers egyik jellemzője: azonos vagy rokon hangzású szavak, szótagok meghatározott helyen történő összecsengése.", "answers": ["rím"]}, {"type": "concept", "q": "Olyan alkotás, amelynek szerzője ismert, szövege állandó, írásban terjed.", "answers": ["műköltészeti alkotás", "műköltészet", "műköltészeti"]}, {"type": "concept", "q": "A mindennapi élet valamelyik jellemző helyzetét vagy alakját ábrázoló verses vagy prózai alkotás.", "answers": ["életkép"]}, {"type": "concept", "q": "Boldogságot, érzelmes, derűs jelenetet ábrázoló vers.", "answers": ["idill"]}, {"type": "concept", "q": "Amikor egy mű első és utolsó versszaka hasonló vagy egyforma.", "answers": ["keretes szerkezet", "keretes"]}, {"type": "mc", "label": "📝 Rímfelismerés", "img": "<div class=\"verse\">Este van, este van: kiki nyugalomba!<br>Feketén bólingat az eperfa lombja,<br>Zúg az éji bogár, nekimegy a falnak,<br>Nagyot koppan akkor, azután elhallgat.</div>", "q": "Milyen rím van ebben a versszakban?", "options": ["Páros rím", "Keresztrím", "Ölelkező rím", "Bokorrím", "Félrím"], "answer": 0, "expl": "💡 Arany János: Családi kör – nyugalomba / lombja (a a), falnak / elhallgat (b b)."}, {"type": "mc", "label": "📝 Rímfelismerés", "img": "<div class=\"verse\">Fúj a szél, a felhő szalad,<br>szürke lett a domb felett,<br>egy levél sem fenn marad,<br>a kertből sárga tenger lett.</div>", "q": "Milyen rím van ebben a versszakban?", "options": ["Páros rím", "Keresztrím", "Ölelkező rím", "Bokorrím", "Félrím"], "answer": 1, "expl": "💡 szalad / marad (1. és 3. sor), felett / lett (2. és 4. sor) → abab"}, {"type": "mc", "label": "📝 Rímfelismerés", "img": "<div class=\"verse\">Tavasz jön a hegyen át,<br>fecske száll a kék egen,<br>dalol vígan, kedvesen,<br>ébresztgeti a fát.</div>", "q": "Milyen rím van ebben a versszakban?", "options": ["Páros rím", "Keresztrím", "Ölelkező rím", "Bokorrím", "Félrím"], "answer": 2, "expl": "💡 át / fát (1. és 4. sor), egen / kedvesen (2. és 3. sor) → abba"}, {"type": "mc", "label": "📝 Rímfelismerés", "img": "<div class=\"verse\">Zúg a patak, csobogva fut,<br>kanyarog, mint egy kis út,<br>kövek között utat tud,<br>a tengerig egyszer eljut.</div>", "q": "Milyen rím van ebben a versszakban?", "options": ["Páros rím", "Keresztrím", "Ölelkező rím", "Bokorrím", "Félrím"], "answer": 3, "expl": "💡 fut / út / tud / eljut – mind a négy sor rímel → aaaa"}, {"type": "mc", "label": "📝 Rímfelismerés", "img": "<div class=\"verse\">Csendes a falu, alszik már,<br>pislákol a kis mécses,<br>nagyanyó mesél a tűznél,<br>a mese szép és kedves.</div>", "q": "Milyen rím van ebben a versszakban?", "options": ["Páros rím", "Keresztrím", "Ölelkező rím", "Bokorrím", "Félrím"], "answer": 4, "expl": "💡 Csak a 2. és a 4. sor rímel (mécses / kedves) → xaxa"}, {"type": "mc", "label": "📖 Szövegfelismerés", "img": "<div class=\"verse\"><span class=\"who\">ANNA</span> <span class=\"dir\">(az ablakhoz lép)</span>: Nézd, már esik a hó!<br><span class=\"who\">PÉTER</span> <span class=\"dir\">(felugrik a székről)</span>: Akkor irány a domb, szánkózni!</div>", "q": "Melyik műnembe tartozik ez a részlet?", "options": ["Dráma", "Líra", "Epika"], "answer": 0, "expl": "💡 Párbeszéd és zárójeles szerzői utasítások → dráma."}, {"type": "mc", "label": "📖 Szövegfelismerés", "img": "<div class=\"verse\">Egyszer volt, hol nem volt, élt egyszer egy szegény ember, akinek három fia volt. Egy napon a legkisebb fiú útnak indult, hogy szerencsét próbáljon…</div>", "q": "Melyik műnembe tartozik ez a részlet?", "options": ["Epika", "Líra", "Dráma"], "answer": 0, "expl": "💡 Történetet mond el, szereplőkkel, prózában → epika (mese)."}];
 const LABEL={mc:'🔘 Feleletválasztós',tf:'✅❌ Igaz vagy hamis?',fill:'✏️ Írd be a hiányzó szót!',match:'🔗 Párosítsd össze!',multi:'☑️ Több helyes válasz is van!',concept:'💡 Fogalomfelismerés'};
-const STARS=['⭐','🌟','✨','💫','🎉','🏆','📜','🥳'];
+const STARS=['⭐','🌟','✨','💫','🎉','🏆','📖','🥳'];
 let order=[],idx=0,results=[],checked=false,cur=null;
 const $=id=>document.getElementById(id);
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
@@ -162,13 +168,13 @@ function start(){order=shuffle(QUESTIONS.map((_,i)=>i));idx=0;results=[];score()
 
 function render(){
   const q=QUESTIONS[order[idx]];cur={q,sel:null,multi:new Set()};checked=false;
-  $('typeBadge').textContent=LABEL[q.type];
+  $('typeBadge').textContent=q.label||(q.img?'🖼️ Képfelismerés':LABEL[q.type]);
   $('fb').className='feedback';$('fb').textContent='';
   $('expl').className='expl';$('expl').textContent=q.expl||'';
   const b=$('bMain');b.textContent='✓ Ellenőrzés';b.className='btn btn-check';
   $('bBack').disabled=results.length===0;$('bSkip').disabled=false;
   $('prog').style.width=(idx/order.length*100)+'%';$('progLbl').textContent=(idx+1)+'/'+order.length;
-  let head='',body='';
+  let head='',body='';const img=q.img?'<div class="q-img">'+q.img+'</div>':'';
   if(q.type==='mc'){
     head=`<div class="q-text">${esc(q.q)}</div>`;
     cur.opts=shuffle(q.options.map((t,i)=>({t,i})));
@@ -192,7 +198,7 @@ function render(){
     cur.opts=shuffle(q.options.map((t,i)=>({t,i})));
     body='<div class="opts">'+cur.opts.map(o=>`<button class="opt square" data-i="${o.i}" onclick="toggle(this)"><span class="mark"></span>${esc(o.t)}</button>`).join('')+'</div>';
   }
-  $('qHead').innerHTML=head;$('qBody').innerHTML=body;
+  $('qHead').innerHTML=img+head;$('qBody').innerHTML=body;
   const t=$('txt');if(t){t.addEventListener('keydown',e=>{if(e.key==='Enter')main();});setTimeout(()=>t.focus(),60);}
 }
 function pick(el){if(checked)return;document.querySelectorAll('#qBody .opt').forEach(o=>{o.classList.remove('sel');o.querySelector('.mark').textContent='';});el.classList.add('sel');el.querySelector('.mark').textContent='●';cur.sel=+el.dataset.i;}
@@ -206,7 +212,7 @@ function correctText(q){
   if(q.type==='match')return q.pairs.map(p=>p[0]+' → '+p[1]).join(' · ');
   if(q.type==='multi')return q.answers.map(i=>q.options[i]).join(', ');
 }
-function qShort(q){return q.type==='tf'?'„'+q.q+'”':q.q;}
+function qShort(q){return (q.img?'📝 ':'')+(q.type==='tf'?'„'+q.q+'”':q.q);}
 
 function main(){if(checked){advance();return;}evaluate(false);}
 function skip(){if(checked){advance();return;}evaluate(true);}
@@ -258,7 +264,7 @@ function finish(){
   const g=results.filter(r=>r.ok).length,n=results.length,pct=Math.round(g/n*100);
   $('rEmoji').textContent=pct===100?'🏆':pct>=80?'🥳':pct>=60?'😊':'💪';
   $('rPct').textContent=pct+'%';
-  $('rMsg').textContent=pct===100?'Tökéletes! Igazi történész vagy!':pct>=80?'Nagyon jó! Büszke lehetsz!':pct>=60?'Szép munka! Még egy kicsit gyakorolj!':'Nézd át a füzetet és próbáld újra!';
+  $('rMsg').textContent=pct===100?'Tökéletes! Igazi irodalmár vagy!':pct>=80?'Nagyon jó! Büszke lehetsz!':pct>=60?'Szép munka! Még egy kicsit gyakorolj!':'Nézd át a füzetet és próbáld újra!';
   $('rG').textContent=g;$('rR').textContent=n-g;
   const w=results.filter(r=>!r.ok);
   $('wrongWrap').innerHTML=w.length?'<div class="list-title">❌ Ezeket érdemes átnézni</div>'+w.map(r=>`<div class="w-item"><div class="w-q">${esc(qShort(r.q))}</div><div class="w-u">A te válaszod: ${esc(r.user)}</div><div class="w-c">Helyes: ${esc(correctText(r.q))}</div></div>`).join(''):'';
