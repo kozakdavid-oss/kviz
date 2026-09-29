@@ -230,6 +230,13 @@ body{
     <div class="card-sub">dió, csonthéjasok, szőlő, paprika</div>
     <span class="card-badge" style="background:linear-gradient(135deg,#65a30d,#3f6212)">40 feladat</span>
   </a>
+
+  <a class="card" href="kornyezet_3.html" style="animation-delay:.15s">
+    <span class="card-emoji">🐦</span>
+    <div class="card-title">Környezet_3</div>
+    <div class="card-sub">a kert madarai, madárvédelem, téli etetés, fészekodú</div>
+    <span class="card-badge" style="background:linear-gradient(135deg,#0ea5e9,#0369a1)">21 feladat</span>
+  </a>
 </div>
 </div>
 
@@ -253,9 +260,9 @@ body{
 function showTab(p){
   document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id==='p-'+p));
   document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.p===p));
-  history.replaceState(null,'','#'+p);
+  try{history.replaceState(null,'','#'+p);}catch(e){}
 }
-const _h=location.hash.slice(1);showTab(['angol','tortenelem','kornyezet','irodalom'].includes(_h)?_h:'angol');
+let _h='';try{_h=location.hash.slice(1);}catch(e){}showTab(['angol','tortenelem','kornyezet','irodalom'].includes(_h)?_h:'angol');
 </script>
 </body>
 </html>
