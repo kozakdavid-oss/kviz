@@ -93,6 +93,9 @@ body{
 .tab:active{transform:scale(.97);}
 .tab.active{background:#fff;color:#1a1040;box-shadow:0 3px 12px rgba(100,60,200,.18);}
 .tab.active.t-en{background:linear-gradient(135deg,#3a86ff,#7b5ea7);color:#fff;}
+.tab.active.t-mat{background:linear-gradient(135deg,#6366f1,#f97316);color:#fff;}
+.section-title.mat span{background:linear-gradient(90deg,#6366f1,#f97316);}
+.tab:last-child:nth-child(odd){grid-column:1/-1;}
 .tab.active.t-lit{background:linear-gradient(135deg,#8b5cf6,#5b21b6);color:#fff;}
 .section-title.lit span{background:linear-gradient(90deg,#8b5cf6,#5b21b6);}
 .tab.active.t-env{background:linear-gradient(135deg,#ec4899,#65a30d);color:#fff;}
@@ -119,6 +122,7 @@ body{
   <button class="tab t-hist" data-p="tortenelem" onclick="showTab('tortenelem')">🏛️ Történelem</button>
   <button class="tab t-env" data-p="kornyezet" onclick="showTab('kornyezet')">🌱 Környezet</button>
   <button class="tab t-lit" data-p="irodalom" onclick="showTab('irodalom')">📖 Irodalom</button>
+  <button class="tab t-mat" data-p="matek" onclick="showTab('matek')">🔢 Matek</button>
 </div>
 
 <div class="panel" id="p-angol">
@@ -252,6 +256,25 @@ body{
 </div>
 </div>
 
+<div class="panel" id="p-matek">
+<div class="section-title mat"><span>5. osztály</span> 🔢 Matematika</div>
+<div class="grid">
+  <a class="card" href="matek_1.html" style="animation-delay:.05s">
+    <span class="card-emoji">🔢</span>
+    <div class="card-title">Matek_1</div>
+    <div class="card-sub">nagy számok, római számok, halmazok, számegyenes</div>
+    <span class="card-badge" style="background:linear-gradient(135deg,#6366f1,#4338ca)">28 feladat</span>
+  </a>
+
+  <a class="card" href="matek_2.html" style="animation-delay:.1s">
+    <span class="card-emoji">📏</span>
+    <div class="card-title">Matek_2</div>
+    <div class="card-sub">mértékegységek, átváltás, mérés, kivonás, zárójelek</div>
+    <span class="card-badge" style="background:linear-gradient(135deg,#f97316,#c2410c)">33 feladat</span>
+  </a>
+</div>
+</div>
+
 <div class="footer">
   🌟 Minden feladatsor újra kitölthető, véletlenszerű sorrendben 🌟<br><small>Frissítve: 2026.09.26.</small>
 </div>
@@ -262,7 +285,7 @@ function showTab(p){
   document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.p===p));
   try{history.replaceState(null,'','#'+p);}catch(e){}
 }
-let _h='';try{_h=location.hash.slice(1);}catch(e){}showTab(['angol','tortenelem','kornyezet','irodalom'].includes(_h)?_h:'angol');
+let _h='';try{_h=location.hash.slice(1);}catch(e){}showTab(['angol','tortenelem','kornyezet','irodalom','matek'].includes(_h)?_h:'angol');
 </script>
 </body>
 </html>
