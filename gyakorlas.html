@@ -93,6 +93,8 @@ body{
 .tab:active{transform:scale(.97);}
 .tab.active{background:#fff;color:#1a1040;box-shadow:0 3px 12px rgba(100,60,200,.18);}
 .tab.active.t-en{background:linear-gradient(135deg,#3a86ff,#7b5ea7);color:#fff;}
+.tab.active.t-mus{background:linear-gradient(135deg,#a855f7,#7e22ce);color:#fff;}
+.section-title.mus span{background:linear-gradient(90deg,#a855f7,#7e22ce);}
 .tab.active.t-mat{background:linear-gradient(135deg,#6366f1,#f97316);color:#fff;}
 .section-title.mat span{background:linear-gradient(90deg,#6366f1,#f97316);}
 .tab:last-child:nth-child(odd){grid-column:1/-1;}
@@ -123,6 +125,7 @@ body{
   <button class="tab t-env" data-p="kornyezet" onclick="showTab('kornyezet')">🌱 Környezet</button>
   <button class="tab t-lit" data-p="irodalom" onclick="showTab('irodalom')">📖 Irodalom</button>
   <button class="tab t-mat" data-p="matek" onclick="showTab('matek')">🔢 Matek</button>
+  <button class="tab t-mus" data-p="enek" onclick="showTab('enek')">🎵 Ének</button>
 </div>
 
 <div class="panel" id="p-angol">
@@ -194,6 +197,13 @@ body{
     <div class="card-sub">toll, ceruza, radír, olló...</div>
     <span class="card-badge" style="background:linear-gradient(135deg,#3a86ff,#1a44d4)">15 szó</span>
   </a>
+  <a class="card" href="angol_szemelyes.html" style="animation-delay:.6s">
+    <span class="card-emoji">🏐</span>
+    <div class="card-title">Személyes adatok &amp; sport</div>
+    <div class="card-sub">név, lakcím, e-mail, sportok...</div>
+    <span class="card-badge" style="background:linear-gradient(135deg,#0ea5e9,#6366f1)">14 szó</span>
+  </a>
+
 </div>
 
 </div>
@@ -275,6 +285,18 @@ body{
 </div>
 </div>
 
+<div class="panel" id="p-enek">
+<div class="section-title mus"><span>5. osztály</span> 🎵 Ének-zene</div>
+<div class="grid">
+  <a class="card" href="enek_1.html" style="animation-delay:.05s">
+    <span class="card-emoji">🎵</span>
+    <div class="card-title">Ének_1</div>
+    <div class="card-sub">magyar népdalok: régi és új stílus</div>
+    <span class="card-badge" style="background:linear-gradient(135deg,#a855f7,#7e22ce)">24 feladat</span>
+  </a>
+</div>
+</div>
+
 <div class="footer">
   🌟 Minden feladatsor újra kitölthető, véletlenszerű sorrendben 🌟<br><small>Frissítve: 2026.09.26.</small>
 </div>
@@ -285,7 +307,7 @@ function showTab(p){
   document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.p===p));
   try{history.replaceState(null,'','#'+p);}catch(e){}
 }
-let _h='';try{_h=location.hash.slice(1);}catch(e){}showTab(['angol','tortenelem','kornyezet','irodalom','matek'].includes(_h)?_h:'angol');
+let _h='';try{_h=location.hash.slice(1);}catch(e){}showTab(['angol','tortenelem','kornyezet','irodalom','matek','enek'].includes(_h)?_h:'angol');
 </script>
 </body>
 </html>
