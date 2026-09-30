@@ -108,206 +108,235 @@ body{
 .panel .section-title{margin-top:0;}
 /* FOOTER */
 .footer{margin-top:2.5rem;text-align:center;font-size:13px;color:var(--muted);}
+
+.view{display:none;width:100%;max-width:520px;flex-direction:column;align-items:center;}
+.view.active{display:flex;animation:fadeUp .35s ease;}
+.subjects{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;max-width:520px;}
+.subj{border:none;cursor:pointer;font-family:inherit;border-radius:24px;padding:1.4rem .8rem 1.1rem;color:#fff;
+  background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 8px 26px rgba(60,40,120,.18);
+  display:flex;flex-direction:column;align-items:center;gap:4px;transition:transform .15s,box-shadow .15s;}
+.subj:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(60,40,120,.25);}
+.subj:active{transform:scale(.97);}
+.s-emoji{font-size:46px;line-height:1.1;margin-bottom:4px;}
+.s-name{font-size:19px;font-weight:900;}
+.s-sub{font-size:12px;opacity:.9;text-align:center;}
+.s-count{margin-top:8px;background:rgba(255,255,255,.25);border-radius:99px;padding:3px 12px;font-size:12px;font-weight:800;}
+.back{align-self:flex-start;border:none;cursor:pointer;font-family:inherit;background:#fff;color:#4c1d95;font-weight:800;font-size:15px;
+  padding:11px 18px;border-radius:14px;box-shadow:0 4px 16px rgba(60,40,120,.12);margin-bottom:1.1rem;}
+.back:hover{background:#f5f3ff;}
+.subj-head{width:100%;border-radius:20px;padding:14px 18px;margin-bottom:1.2rem;color:#fff;font-size:22px;font-weight:900;
+  background:linear-gradient(135deg,var(--c1),var(--c2));display:flex;align-items:center;gap:10px;}
+.subj-head small{margin-left:auto;font-size:12px;background:rgba(255,255,255,.25);padding:3px 10px;border-radius:99px;}
+.grid{margin-bottom:1rem;}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <span class="header-icon">🏫</span>
-  <h1>Gyakorló feladatok</h1>
-  <p>Válassz tantárgyat és témakört, és gyakorolj!<br>Minden körben más sorrendben jönnek a feladatok.</p>
-  <div class="grade-badge">📚 5. osztály</div>
-</div>
+<section class="view" id="v-home">
+  <div class="header">
+    <span class="header-icon">🏫</span>
+    <h1>Gyakorló feladatok</h1>
+    <p>Válassz tantárgyat!</p>
+    <div class="grade-badge">📚 5. osztály</div>
+  </div>
+  <div class="subjects">
+<button class="subj" onclick="go('angol')" style="--c1:#3a86ff;--c2:#7b5ea7">
+  <span class="s-emoji">🇬🇧</span><span class="s-name">Angol</span><span class="s-sub">szókincs, magyar → angol</span>
+  <span class="s-count">12 feladatsor</span></button><button class="subj" onclick="go('tortenelem')" style="--c1:#f59e0b;--c2:#0f766e">
+  <span class="s-emoji">🏛️</span><span class="s-name">Történelem</span><span class="s-sub">források, időszámítás</span>
+  <span class="s-count">2 feladatsor</span></button><button class="subj" onclick="go('kornyezet')" style="--c1:#ec4899;--c2:#65a30d">
+  <span class="s-emoji">🌱</span><span class="s-name">Környezet</span><span class="s-sub">kert, gyümölcsfák, madarak</span>
+  <span class="s-count">3 feladatsor</span></button><button class="subj" onclick="go('irodalom')" style="--c1:#8b5cf6;--c2:#5b21b6">
+  <span class="s-emoji">📖</span><span class="s-name">Irodalom</span><span class="s-sub">műnemek, rímek</span>
+  <span class="s-count">1 feladatsor</span></button><button class="subj" onclick="go('matek')" style="--c1:#6366f1;--c2:#f97316">
+  <span class="s-emoji">🔢</span><span class="s-name">Matek</span><span class="s-sub">számok, mérés, műveletek</span>
+  <span class="s-count">2 feladatsor</span></button><button class="subj" onclick="go('enek')" style="--c1:#a855f7;--c2:#7e22ce">
+  <span class="s-emoji">🎵</span><span class="s-name">Ének</span><span class="s-sub">népdalok</span>
+  <span class="s-count">1 feladatsor</span></button>
+  </div>
+</section>
 
-<div class="tabs">
-  <button class="tab t-en" data-p="angol" onclick="showTab('angol')">🇬🇧 Angol</button>
-  <button class="tab t-hist" data-p="tortenelem" onclick="showTab('tortenelem')">🏛️ Történelem</button>
-  <button class="tab t-env" data-p="kornyezet" onclick="showTab('kornyezet')">🌱 Környezet</button>
-  <button class="tab t-lit" data-p="irodalom" onclick="showTab('irodalom')">📖 Irodalom</button>
-  <button class="tab t-mat" data-p="matek" onclick="showTab('matek')">🔢 Matek</button>
-  <button class="tab t-mus" data-p="enek" onclick="showTab('enek')">🎵 Ének</button>
-</div>
-
-<div class="panel" id="p-angol">
-<div class="section-title"><span>5. osztály</span> 🇬🇧 Angol szókincs</div>
-<div class="grid">
-<a class="card" href="magyar_angol_kviz.html" style="animation-delay:.05s">
+<section class="view" id="v-angol">
+  <button class="back" onclick="go('')">⬅ Vissza a tantárgyakhoz</button>
+  <div class="subj-head" style="--c1:#3a86ff;--c2:#7b5ea7"><span>🇬🇧</span> Angol <small>5. osztály</small></div>
+  <div class="grid">
+<a class="card" href="magyar_angol_kviz.html" style="animation-delay:0.00s">
     <span class="card-emoji">🏠</span>
     <div class="card-title">Otthon &amp; Helyiségek</div>
     <div class="card-sub">szoba, bútor, háztartás</div>
     <span class="card-badge c1">34 szó</span>
   </a>
-<a class="card" href="varos_kviz.html" style="animation-delay:.1s">
+<a class="card" href="varos_kviz.html" style="animation-delay:0.04s">
     <span class="card-emoji">🏙️</span>
     <div class="card-title">Város &amp; Épületek</div>
     <div class="card-sub">város, intézmények, helyek</div>
     <span class="card-badge c2">25 szó</span>
   </a>
-<a class="card" href="kulso_kviz.html" style="animation-delay:.15s">
+<a class="card" href="kulso_kviz.html" style="animation-delay:0.08s">
     <span class="card-emoji">🧑</span>
     <div class="card-title">Külső megjelenés 1.</div>
     <div class="card-sub">haj, szem, testalkat</div>
     <span class="card-badge c3">15 szó</span>
   </a>
-<a class="card" href="kulso2_kviz.html" style="animation-delay:.2s">
+<a class="card" href="kulso2_kviz.html" style="animation-delay:0.12s">
     <span class="card-emoji">✂️</span>
     <div class="card-title">Külső megjelenés 2.</div>
     <div class="card-sub">göndör, hullámos, egyenes...</div>
     <span class="card-badge c4">8 szó</span>
   </a>
-<a class="card" href="vegyes_kviz.html" style="animation-delay:.25s">
+<a class="card" href="vegyes_kviz.html" style="animation-delay:0.16s">
     <span class="card-emoji">📖</span>
     <div class="card-title">Vegyes szavak</div>
     <div class="card-sub">igék, kifejezések, mindennapi szavak</div>
     <span class="card-badge c5">21 szó</span>
   </a>
-<a class="card" href="ruha_kviz.html" style="animation-delay:.3s">
+<a class="card" href="ruha_kviz.html" style="animation-delay:0.20s">
     <span class="card-emoji">👗</span>
     <div class="card-title">Ruházat 1.</div>
     <div class="card-sub">ruhák, cipők, kiegészítők</div>
     <span class="card-badge c6">22 szó</span>
   </a>
-<a class="card" href="ruha2_kviz.html" style="animation-delay:.35s">
+<a class="card" href="ruha2_kviz.html" style="animation-delay:0.24s">
     <span class="card-emoji">🎽</span>
     <div class="card-title">Ruházat 2.</div>
     <div class="card-sub">egyenruha, kedvenc, jelvény...</div>
     <span class="card-badge c8">5 szó</span>
   </a>
-<a class="card" href="butor_kviz.html" style="animation-delay:.4s">
+<a class="card" href="butor_kviz.html" style="animation-delay:0.28s">
     <span class="card-emoji">🛋️</span>
     <div class="card-title">Bútorok</div>
     <div class="card-sub">szék, asztal, szekrény, polc...</div>
     <span class="card-badge c7">15 szó</span>
   </a>
-<a class="card" href="etel_kviz.html" style="animation-delay:.45s">
+<a class="card" href="etel_kviz.html" style="animation-delay:0.32s">
     <span class="card-emoji">🍎</span>
     <div class="card-title">Ételek &amp; italok</div>
     <div class="card-sub">alma, kenyér, tej, rizs...</div>
     <span class="card-badge" style="background:linear-gradient(135deg,#ff6b6b,#c0392b)">15 szó</span>
   </a>
-<a class="card" href="targy_kviz.html" style="animation-delay:.5s">
+<a class="card" href="targy_kviz.html" style="animation-delay:0.36s">
     <span class="card-emoji">🎒</span>
     <div class="card-title">Tárgyak</div>
     <div class="card-sub">kulcs, táska, esernyő, labda...</div>
     <span class="card-badge" style="background:linear-gradient(135deg,#00c9a7,#007a65)">15 szó</span>
   </a>
-<a class="card" href="iroda_kviz.html" style="animation-delay:.55s">
+<a class="card" href="iroda_kviz.html" style="animation-delay:0.40s">
     <span class="card-emoji">✏️</span>
     <div class="card-title">Irodai eszközök</div>
     <div class="card-sub">toll, ceruza, radír, olló...</div>
     <span class="card-badge" style="background:linear-gradient(135deg,#3a86ff,#1a44d4)">15 szó</span>
   </a>
-  <a class="card" href="angol_szemelyes.html" style="animation-delay:.6s">
+<a class="card" href="angol_szemelyes.html" style="animation-delay:0.44s">
     <span class="card-emoji">🏐</span>
     <div class="card-title">Személyes adatok &amp; sport</div>
     <div class="card-sub">név, lakcím, e-mail, sportok...</div>
     <span class="card-badge" style="background:linear-gradient(135deg,#0ea5e9,#6366f1)">14 szó</span>
   </a>
-
-</div>
-
-</div>
-
-<div class="panel" id="p-tortenelem">
-<div class="section-title hist"><span>5. osztály</span> 🏛️ Történelem</div>
-<div class="grid">
-  <a class="card" href="tortenelem_egy.html" style="animation-delay:.05s">
-    <span class="card-emoji">📜</span>
-    <div class="card-title">Történelem_egy</div>
-    <div class="card-sub">források, régészet, címer, zászló, pecsét</div>
-    <span class="card-badge" style="background:linear-gradient(135deg,#f59e0b,#b45309)">21 feladat</span>
-  </a>
-
-  <a class="card" href="tortenelem_2.html" style="animation-delay:.1s">
+  </div>
+</section>
+<section class="view" id="v-tortenelem">
+  <button class="back" onclick="go('')">⬅ Vissza a tantárgyakhoz</button>
+  <div class="subj-head" style="--c1:#f59e0b;--c2:#0f766e"><span>🏛️</span> Történelem <small>5. osztály</small></div>
+  <div class="grid">
+<a class="card" href="tortenelem_2.html" style="animation-delay:0.00s">
     <span class="card-emoji">⏳</span>
     <div class="card-title">Történelem_2</div>
     <div class="card-sub">időszámítás, évszázadok, korszakok</div>
     <span class="card-badge" style="background:linear-gradient(135deg,#14b8a6,#0f766e)">21 feladat</span>
   </a>
-</div>
-
-</div>
-
-<div class="panel" id="p-kornyezet">
-<div class="section-title env"><span>5. osztály</span> 🌱 Környezet</div>
-<div class="grid">
-  <a class="card" href="kornyezet_1.html" style="animation-delay:.05s">
+<a class="card" href="tortenelem_egy.html" style="animation-delay:0.04s">
+    <span class="card-emoji">📜</span>
+    <div class="card-title">Történelem_egy</div>
+    <div class="card-sub">források, régészet, címer, zászló, pecsét</div>
+    <span class="card-badge" style="background:linear-gradient(135deg,#f59e0b,#b45309)">21 feladat</span>
+  </a>
+  </div>
+</section>
+<section class="view" id="v-kornyezet">
+  <button class="back" onclick="go('')">⬅ Vissza a tantárgyakhoz</button>
+  <div class="subj-head" style="--c1:#ec4899;--c2:#65a30d"><span>🌱</span> Környezet <small>5. osztály</small></div>
+  <div class="grid">
+<a class="card" href="kornyezet_1.html" style="animation-delay:0.00s">
     <span class="card-emoji">🌷</span>
     <div class="card-title">Környezet_1</div>
     <div class="card-sub">évszakok a kertben, életfeltételek, növényi szervek, őszibarack</div>
     <span class="card-badge" style="background:linear-gradient(135deg,#ec4899,#be185d)">32 feladat</span>
   </a>
-
-  <a class="card" href="kornyezet_2.html" style="animation-delay:.1s">
+<a class="card" href="kornyezet_2.html" style="animation-delay:0.04s">
     <span class="card-emoji">🍇</span>
     <div class="card-title">Környezet_2</div>
     <div class="card-sub">dió, csonthéjasok, szőlő, paprika</div>
     <span class="card-badge" style="background:linear-gradient(135deg,#65a30d,#3f6212)">40 feladat</span>
   </a>
-
-  <a class="card" href="kornyezet_3.html" style="animation-delay:.15s">
+<a class="card" href="kornyezet_3.html" style="animation-delay:0.08s">
     <span class="card-emoji">🐦</span>
     <div class="card-title">Környezet_3</div>
     <div class="card-sub">a kert madarai, madárvédelem, téli etetés, fészekodú</div>
     <span class="card-badge" style="background:linear-gradient(135deg,#0ea5e9,#0369a1)">21 feladat</span>
   </a>
-</div>
-</div>
-
-<div class="panel" id="p-irodalom">
-<div class="section-title lit"><span>5. osztály</span> 📖 Irodalom</div>
-<div class="grid">
-  <a class="card" href="irodalom_1.html" style="animation-delay:.05s">
+  </div>
+</section>
+<section class="view" id="v-irodalom">
+  <button class="back" onclick="go('')">⬅ Vissza a tantárgyakhoz</button>
+  <div class="subj-head" style="--c1:#8b5cf6;--c2:#5b21b6"><span>📖</span> Irodalom <small>5. osztály</small></div>
+  <div class="grid">
+<a class="card" href="irodalom_1.html" style="animation-delay:0.00s">
     <span class="card-emoji">📖</span>
     <div class="card-title">Irodalom_1</div>
     <div class="card-sub">műnemek, műfajok, nép- és műköltészet, rímek, Családi kör</div>
     <span class="card-badge" style="background:linear-gradient(135deg,#8b5cf6,#5b21b6)">36 feladat</span>
   </a>
-</div>
-</div>
-
-<div class="panel" id="p-matek">
-<div class="section-title mat"><span>5. osztály</span> 🔢 Matematika</div>
-<div class="grid">
-  <a class="card" href="matek_1.html" style="animation-delay:.05s">
+  </div>
+</section>
+<section class="view" id="v-matek">
+  <button class="back" onclick="go('')">⬅ Vissza a tantárgyakhoz</button>
+  <div class="subj-head" style="--c1:#6366f1;--c2:#f97316"><span>🔢</span> Matek <small>5. osztály</small></div>
+  <div class="grid">
+<a class="card" href="matek_1.html" style="animation-delay:0.00s">
     <span class="card-emoji">🔢</span>
     <div class="card-title">Matek_1</div>
     <div class="card-sub">nagy számok, római számok, halmazok, számegyenes</div>
     <span class="card-badge" style="background:linear-gradient(135deg,#6366f1,#4338ca)">28 feladat</span>
   </a>
-
-  <a class="card" href="matek_2.html" style="animation-delay:.1s">
+<a class="card" href="matek_2.html" style="animation-delay:0.04s">
     <span class="card-emoji">📏</span>
     <div class="card-title">Matek_2</div>
     <div class="card-sub">mértékegységek, átváltás, mérés, kivonás, zárójelek</div>
     <span class="card-badge" style="background:linear-gradient(135deg,#f97316,#c2410c)">33 feladat</span>
   </a>
-</div>
-</div>
-
-<div class="panel" id="p-enek">
-<div class="section-title mus"><span>5. osztály</span> 🎵 Ének-zene</div>
-<div class="grid">
-  <a class="card" href="enek_1.html" style="animation-delay:.05s">
+  </div>
+</section>
+<section class="view" id="v-enek">
+  <button class="back" onclick="go('')">⬅ Vissza a tantárgyakhoz</button>
+  <div class="subj-head" style="--c1:#a855f7;--c2:#7e22ce"><span>🎵</span> Ének <small>5. osztály</small></div>
+  <div class="grid">
+<a class="card" href="enek_1.html" style="animation-delay:0.00s">
     <span class="card-emoji">🎵</span>
     <div class="card-title">Ének_1</div>
     <div class="card-sub">magyar népdalok: régi és új stílus</div>
     <span class="card-badge" style="background:linear-gradient(135deg,#a855f7,#7e22ce)">24 feladat</span>
   </a>
-</div>
-</div>
+  </div>
+</section>
 
 <div class="footer">
-  🌟 Minden feladatsor újra kitölthető, véletlenszerű sorrendben 🌟<br><small>Frissítve: 2026.09.26.</small>
+  🌟 Minden feladatsor újra kitölthető, véletlenszerű sorrendben 🌟<br><small>Frissítve: 2026.09.27.</small>
 </div>
 
 <script>
-function showTab(p){
-  document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id==='p-'+p));
-  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.p===p));
-  try{history.replaceState(null,'','#'+p);}catch(e){}
+const IDS=['angol','tortenelem','kornyezet','irodalom','matek','enek'];
+function show(p){
+  if(!IDS.includes(p))p='home';
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='v-'+p));
+  window.scrollTo(0,0);
 }
-let _h='';try{_h=location.hash.slice(1);}catch(e){}showTab(['angol','tortenelem','kornyezet','irodalom','matek','enek'].includes(_h)?_h:'angol');
+function go(p){
+  show(p||'home');
+  try{ if(p) location.hash=p; else history.pushState(null,'',location.pathname); }catch(e){}
+}
+window.addEventListener('hashchange',()=>{let x='';try{x=location.hash.slice(1);}catch(e){}show(x);});
+let _h='';try{_h=location.hash.slice(1);}catch(e){}
+show(_h);
 </script>
 </body>
 </html>
