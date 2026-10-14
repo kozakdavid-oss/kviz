@@ -128,6 +128,7 @@ body{
   background:linear-gradient(135deg,var(--c1),var(--c2));display:flex;align-items:center;gap:10px;}
 .subj-head small{margin-left:auto;font-size:12px;background:rgba(255,255,255,.25);padding:3px 10px;border-radius:99px;}
 .grid{margin-bottom:1rem;}
+.subj:last-child:nth-child(odd){grid-column:1/-1;}
 </style>
 </head>
 <body>
@@ -142,7 +143,7 @@ body{
   <div class="subjects">
 <button class="subj" onclick="go('angol')" style="--c1:#3a86ff;--c2:#7b5ea7">
   <span class="s-emoji">🇬🇧</span><span class="s-name">Angol</span><span class="s-sub">szókincs, magyar → angol</span>
-  <span class="s-count">12 feladatsor</span></button><button class="subj" onclick="go('tortenelem')" style="--c1:#f59e0b;--c2:#0f766e">
+  <span class="s-count">13 feladatsor</span></button><button class="subj" onclick="go('tortenelem')" style="--c1:#f59e0b;--c2:#0f766e">
   <span class="s-emoji">🏛️</span><span class="s-name">Történelem</span><span class="s-sub">források, időszámítás</span>
   <span class="s-count">2 feladatsor</span></button><button class="subj" onclick="go('kornyezet')" style="--c1:#ec4899;--c2:#65a30d">
   <span class="s-emoji">🌱</span><span class="s-name">Környezet</span><span class="s-sub">kert, gyümölcsfák, madarak</span>
@@ -152,6 +153,8 @@ body{
   <span class="s-emoji">🔢</span><span class="s-name">Matek</span><span class="s-sub">számok, mérés, műveletek</span>
   <span class="s-count">2 feladatsor</span></button><button class="subj" onclick="go('enek')" style="--c1:#a855f7;--c2:#7e22ce">
   <span class="s-emoji">🎵</span><span class="s-name">Ének</span><span class="s-sub">népdalok</span>
+  <span class="s-count">1 feladatsor</span></button><button class="subj" onclick="go('nyelvtan')" style="--c1:#14b8a6;--c2:#0f766e">
+  <span class="s-emoji">✏️</span><span class="s-name">Nyelvtan</span><span class="s-sub">kommunikáció</span>
   <span class="s-count">1 feladatsor</span></button>
   </div>
 </section>
@@ -231,6 +234,12 @@ body{
     <div class="card-title">Személyes adatok &amp; sport</div>
     <div class="card-sub">név, lakcím, e-mail, sportok...</div>
     <span class="card-badge" style="background:linear-gradient(135deg,#0ea5e9,#6366f1)">14 szó</span>
+  </a>
+  <a class="card" href="angol_iskola.html" style="animation-delay:.48s">
+    <span class="card-emoji">🏢</span>
+    <div class="card-title">Iskola, lakás &amp; egyebek</div>
+    <div class="card-sub">flat, floor, registration, band, college...</div>
+    <span class="card-badge" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">17 szó</span>
   </a>
   </div>
 </section>
@@ -319,12 +328,24 @@ body{
   </div>
 </section>
 
+<section class="view" id="v-nyelvtan">
+  <button class="back" onclick="go('')">⬅ Vissza a tantárgyakhoz</button>
+  <div class="subj-head" style="--c1:#14b8a6;--c2:#0f766e"><span>✏️</span> Nyelvtan <small>5. osztály</small></div>
+  <div class="grid">
+  <a class="card" href="nyelvtan_1.html" style="animation-delay:0.00s">
+    <span class="card-emoji">💬</span>
+    <div class="card-title">Nyelvtan_1</div>
+    <div class="card-sub">kommunikáció: köszönés, megszólítás, bemutatkozás</div>
+    <span class="card-badge" style="background:linear-gradient(135deg,#14b8a6,#0f766e)">28 feladat</span>
+  </a>
+  </div>
+</section>
 <div class="footer">
-  🌟 Minden feladatsor újra kitölthető, véletlenszerű sorrendben 🌟<br><small>Frissítve: 2026.09.27.</small>
+  🌟 Minden feladatsor újra kitölthető, véletlenszerű sorrendben 🌟<br><small>Frissítve: 2026.10.14.</small>
 </div>
 
 <script>
-const IDS=['angol','tortenelem','kornyezet','irodalom','matek','enek'];
+const IDS=['angol','tortenelem','kornyezet','irodalom','matek','enek','nyelvtan'];
 function show(p){
   if(!IDS.includes(p))p='home';
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='v-'+p));
