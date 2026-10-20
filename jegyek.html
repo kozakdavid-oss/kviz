@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5.A – jegyek kimutatása (2026. szeptember–október)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#fdfdfb; --ink:#1d2b4f; --pencil:#5b6270; --line:#dfe4ec;
+  --blue:#2f5fb3; --red:#c8202f; --green:#2e8a4a; --mark:#fff1a8; --card:#ffffff;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root{--paper:#14181f; --ink:#e7ebf3; --pencil:#a3abb9; --line:#2a313d;
+  --blue:#6d9bea; --red:#ff6b74; --green:#5cc47c; --mark:#5a4d12; --card:#1b2029; color-scheme:dark;}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:17px/1.6 "Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px);background-size:100% 32px}
+main{max-width:860px;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+h1{font-size:2rem;line-height:1.2;margin:0 0 .4rem}
+h2{font-size:1.3rem;margin:2.75rem 0 .75rem}
+p{margin:0 0 1rem;max-width:68ch}
+.lead{color:var(--pencil)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1.25rem}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-top:1.5rem}
+.stats div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.9rem 1rem}
+.stats small{display:block;color:var(--pencil);font-size:.85rem}
+.stats strong{font-size:1.7rem}
+.hand{font-family:"Caveat","Comic Sans MS",cursive;font-size:1.6rem;line-height:1;letter-spacing:.04em}
+.low{color:var(--red)} .ok{color:var(--blue)}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;min-width:560px}
+th,td{padding:.6rem .8rem;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:.85rem;color:var(--pencil);font-weight:400}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}
+.diff.pos{color:var(--green)} .diff.neg{color:var(--red)}
+.chart{position:relative;height:360px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.85rem;color:var(--pencil);margin-bottom:.5rem}
+.legend span{display:flex;align-items:center;gap:6px}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+.dist{display:flex;height:34px;border-radius:8px;overflow:hidden;gap:2px;font-size:.85rem;margin-top:.5rem}
+.dist div{display:flex;align-items:center;justify-content:center;color:#fff}
+mark{background:var(--mark);color:inherit;padding:0 .15em}
+footer{margin-top:3rem;font-size:.85rem;color:var(--pencil)}
+</style>
+</head>
+<body>
+<main>
+  <h1>5.A – jegyek kimutatása</h1>
+  <p class="lead">2026. szeptember 1. – október 12. · KRÉTA kimutatás alapján · 14 jegy, 7 tantárgy</p>
+
+  <div class="stats">
+    <div><small>Összes jegy átlaga</small><strong>4,29</strong></div>
+    <div><small>Tantárgyi átlagok átlaga</small><strong>4,17</strong></div>
+    <div><small>Osztályátlagok átlaga</small><strong>4,42</strong></div>
+    <div><small>Ötösök aránya</small><strong>8 / 14</strong></div>
+  </div>
+
+  <h2>Tantárgyanként</h2>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Tantárgy</th><th>Jegyek</th><th class="num">Átlag</th><th class="num">Osztályátlag</th><th class="num">Eltérés</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+  </div>
+
+  <h2>Saját átlag és osztályátlag</h2>
+  <div class="box">
+    <div class="legend">
+      <span><i class="sw" style="background:var(--blue)"></i>Saját átlag</span>
+      <span><i class="sw" style="background:var(--red)"></i>Saját átlag 3,5 alatt</span>
+      <span><i class="sw" style="border:2px solid var(--pencil)"></i>Osztályátlag (keretes)</span>
+    </div>
+    <div class="chart"><canvas id="avgChart" role="img" aria-label="Saját átlag és osztályátlag tantárgyanként"></canvas></div>
+  </div>
+
+  <h2>Időrendben</h2>
+  <div class="box">
+    <div class="legend" id="tlLegend"></div>
+    <div class="chart"><canvas id="tlChart" role="img" aria-label="Jegyek időrendben, halmozott átlaggal"></canvas></div>
+  </div>
+  <p style="margin-top:.75rem;font-size:.9rem;color:var(--pencil)">A két angol ötös nem szerepel az idővonalon, mert a dátumuk nem látszik a kimutatásban. Emiatt itt a halmozott átlag 4,17-tel zárul, az angollal együtt 4,29.</p>
+
+  <h2>Jegyeloszlás</h2>
+  <div class="dist" aria-label="Jegyeloszlás: 8 ötös, 3 négyes, 2 hármas, 1 kettes">
+    <div style="flex:8;background:#2e8a4a">5-ös: 8</div>
+    <div style="flex:3;background:#2f5fb3">4-es: 3</div>
+    <div style="flex:2;background:#c98a00">3-as: 2</div>
+    <div style="flex:1;background:#c8202f">2</div>
+  </div>
+
+  <h2>Összegzés</h2>
+  <p>Jól indult a tanév: a 14 jegyből 8 ötös, és négy tantárgyban az átlag az osztályátlag felett van. A legjobban az angol (+0,56) és a magyar nyelv (+0,33) emelkedik ki.</p>
+  <p>A <mark>matematika a gyenge pont</mark>: mindkét jegy átlag alatti, és a második (2-es, mértékváltás, kerekítés, számegyenes) gyengébb az elsőnél (3-as, nagy számok, római számok). Ez a témakör később is visszajön, érdemes most gyakorolni. Történelemből szintén 3-as született, de ott egyelőre csak ez az egy jegy van.</p>
+  <p>Időben nézve az átlag szeptember közepén 4,50-ig emelkedett. Szeptember 28-án a matematika kettes visszahúzta, október elején 4,00-ra csökkent, majd a hónap közepén a két hittan ötös javított rajta. A magyar tárgyaknál a második jegyek egy fokkal gyengébbek az év eleji felmérésnél – ez még nem tendencia, de érdemes figyelni.</p>
+
+  <footer>A Magatartás/Szorgalom sorban még nincs jegy. A kimutatás az angol tantárgynál véget ért, további tantárgyak hiányozhatnak.</footer>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const subjects = [
+  {n:'Magyar irodalom', g:[5,5,4], a:4.67, c:4.89},
+  {n:'Magyar nyelv', g:[5,4], a:4.50, c:4.17},
+  {n:'Matematika', g:[3,2], a:2.50, c:4.24},
+  {n:'Történelem', g:[3], a:3.00, c:3.94},
+  {n:'Hit- és erkölcstan', g:[5,5], a:5.00, c:4.98},
+  {n:'Természettudomány', g:[5,4], a:4.50, c:4.30},
+  {n:'Angol', g:[5,5], a:5.00, c:4.44}
+];
+const f = v => v.toFixed(2).replace('.', ',');
+const tb = document.getElementById('tbody');
+subjects.forEach(s => {
+  const d = s.a - s.c;
+  tb.insertAdjacentHTML('beforeend', `<tr>
+    <td>${s.n}</td>
+    <td class="hand">${s.g.map(x => `<span class="${x <= 3 ? 'low' : 'ok'}">${x}</span>`).join(' ')}</td>
+    <td class="num"><strong>${f(s.a)}</strong></td>
+    <td class="num">${f(s.c)}</td>
+    <td class="num diff ${d >= 0 ? 'pos' : 'neg'}">${d >= 0 ? '+' : '−'}${f(Math.abs(d))}</td></tr>`);
+});
+
+const css = getComputedStyle(document.documentElement);
+const v = n => css.getPropertyValue(n).trim();
+const muted = v('--pencil'), grid = v('--line'), blue = v('--blue'), red = v('--red');
+Chart.defaults.font.family = '"Atkinson Hyperlegible", system-ui, sans-serif';
+Chart.defaults.color = muted;
+
+new Chart(document.getElementById('avgChart'), {
+  type: 'bar',
+  data: { labels: subjects.map(s => s.n), datasets: [
+    { label: 'Saját átlag', data: subjects.map(s => s.a), backgroundColor: subjects.map(s => s.a < 3.5 ? red : blue), borderRadius: 4, barThickness: 14 },
+    { label: 'Osztályátlag', data: subjects.map(s => s.c), backgroundColor: 'transparent', borderColor: muted, borderWidth: 2, borderRadius: 4, barThickness: 14 }
+  ]},
+  options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `${c.dataset.label}: ${f(c.raw)}` } } },
+    scales: { x: { min: 1, max: 5, ticks: { stepSize: 1 }, grid: { color: grid } }, y: { ticks: { autoSkip: false }, grid: { display: false } } } }
+});
+
+const tl = [
+  {n:'Magyar irodalom', c:'#2a78d6', s:'circle', p:[{x:9,y:5,t:'Szövegértés – év eleji felmérés'},{x:28,y:5,t:'Arany: Családi kör'},{x:36.7,y:4,t:'Szövegértés'}]},
+  {n:'Magyar nyelv', c:'#eb6834', s:'rect', p:[{x:18,y:5,t:'Év eleji felmérés'},{x:37.3,y:4,t:'Tollbamondás'}]},
+  {n:'Matematika', c:'#e34948', s:'triangle', p:[{x:14,y:3,t:'Nagy számok, római számok'},{x:28,y:2,t:'Mértékváltás, kerekítés, számegyenes'}]},
+  {n:'Történelem', c:'#eda100', s:'rectRot', p:[{x:36,y:3,t:'Személyes történelem, időszámítás'}]},
+  {n:'Hit- és erkölcstan', c:'#6250d6', s:'star', p:[{x:41.7,y:5,t:'Havi jegy'},{x:42.3,y:5,t:'Füzetvezetés'}]},
+  {n:'Természettudomány', c:'#1baf7a', s:'crossRot', p:[{x:22,y:5,t:'Órai munka'},{x:29,y:4,t:'Növények szervei'}]}
+];
+const lg = document.getElementById('tlLegend');
+tl.forEach(s => lg.insertAdjacentHTML('beforeend', `<span><i class="sw" style="background:${s.c}"></i>${s.n}</span>`));
+lg.insertAdjacentHTML('beforeend', `<span><i style="width:16px;border-top:2px dashed ${muted};display:inline-block"></i>Halmozott átlag</span>`);
+const avg = [{x:9,y:5},{x:14,y:4},{x:18,y:4.33},{x:22,y:4.5},{x:28,y:4.17},{x:29,y:4.14},{x:36,y:4},{x:37,y:4},{x:42,y:4.17}];
+const day = d => { d = Math.round(d); return d <= 30 ? `09.${String(d).padStart(2,'0')}.` : `10.${String(d-30).padStart(2,'0')}.`; };
+const ds = tl.map(s => ({ type:'scatter', label:s.n, data:s.p, backgroundColor:s.c, borderColor:s.c, pointStyle:s.s, pointRadius:7, pointHoverRadius:9, borderWidth:2 }));
+ds.push({ type:'line', label:'Halmozott átlag', data:avg, borderColor:muted, borderDash:[6,4], borderWidth:2, pointRadius:0, fill:false });
+new Chart(document.getElementById('tlChart'), {
+  data: { datasets: ds },
+  options: { responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: {
+      title: i => day(i[0].raw.x),
+      label: c => c.raw.t ? `${c.dataset.label}: ${c.raw.y} – ${c.raw.t}` : `Halmozott átlag: ${f(c.raw.y)}` } } },
+    scales: {
+      x: { type:'linear', min:6, max:45, ticks:{ stepSize:7, callback: v => day(v) }, grid:{ display:false } },
+      y: { min:1, max:5.5, ticks:{ stepSize:1, callback: v => v <= 5 ? v : '' }, grid:{ color:grid }, title:{ display:true, text:'Jegy' } } } }
+});
+</script>
+</body>
+</html>
