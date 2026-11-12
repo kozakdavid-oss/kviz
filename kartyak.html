@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tanuló kártyák 🃏</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+html,body{min-height:100%;font-family:'Segoe UI',system-ui,sans-serif;color:#1a1040}
+body{background:linear-gradient(135deg,#fef3c7 0%,#ffe4e6 50%,#ede9fe 100%);min-height:100vh;padding:1rem;display:flex;flex-direction:column;align-items:center}
+.wrap{width:100%;max-width:480px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:.3rem 0 1rem}
+.top a{background:#fff;color:#6d28d9;font-weight:800;font-size:14px;text-decoration:none;padding:8px 14px;border-radius:12px;box-shadow:0 3px 12px rgba(60,40,120,.12)}
+.top h1{font-size:15px;font-weight:900;color:#7c2d12;text-align:right}
+.prog{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+.bar{flex:1;height:14px;background:rgba(255,255,255,.7);border-radius:99px;overflow:hidden;box-shadow:inset 0 2px 5px rgba(0,0,0,.1)}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#f59e0b,#ef4444);border-radius:99px;transition:width .4s}
+.cnt{font-size:14px;font-weight:800;color:#b45309;min-width:60px;text-align:right}
+.scene{perspective:1100px;margin-bottom:1rem}
+.card3d{position:relative;width:100%;min-height:280px;transform-style:preserve-3d;transition:transform .55s;cursor:pointer;animation:fadeUp .3s ease}
+.card3d.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:26px;padding:22px 18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 10px 36px rgba(60,40,120,.18)}
+.front{background:#fff}
+.back{background:linear-gradient(135deg,#fde68a,#fdba74);transform:rotateY(180deg)}
+.lbl{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#7a6f9a;margin-bottom:12px}
+.back .lbl{color:#92400e}
+.txt{font-size:30px;font-weight:900;line-height:1.25;word-break:break-word}
+.txt.long{font-size:21px}
+.sub{margin-top:14px;font-size:14px;font-weight:700;color:#78350f;line-height:1.4}
+.hint{margin-top:16px;font-size:12px;font-weight:700;color:#a78bfa}
+.spk{margin-top:14px;border:none;background:#fff;color:#0369a1;border-radius:14px;padding:8px 16px;font-size:18px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.12)}
+.btns{display:none;gap:10px}
+.btns.on{display:flex}
+.btn{flex:1;border:none;border-radius:16px;font-size:15px;font-weight:800;padding:15px 8px;cursor:pointer;font-family:inherit}
+.again{background:#fee2e2;color:#b91c1c}
+.know{background:linear-gradient(135deg,#10b981,#06b6d4);color:#fff}
+.done{display:none;background:#fff;border-radius:26px;padding:20px 16px;text-align:center;box-shadow:0 10px 36px rgba(60,40,120,.18);animation:fadeUp .35s ease}
+.done.on{display:block}
+.done h2{font-size:24px;margin:6px 0}
+.pts{font-size:26px;font-weight:900;color:#d97706}
+.line{font-size:14px;font-weight:700;color:#4c1d95;margin-top:4px}
+.new{margin-top:8px;background:#ecfdf5;border:2px solid #6ee7b7;border-radius:14px;padding:8px;font-size:14px;font-weight:800;color:#047857}
+.acts{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.acts a,.acts button{border:none;border-radius:14px;padding:13px;font-size:15px;font-weight:800;text-decoration:none;text-align:center;font-family:inherit;cursor:pointer}
+.a1{background:#fef3c7;color:#92400e}.a2{background:#ede9fe;color:#5b21b6}.a3{background:#f1f5f9;color:#475569}
+#mascot{position:fixed;left:6px;bottom:6px;z-index:20;display:flex;align-items:flex-end;gap:4px;pointer-events:none}
+#mascot .kz-l{filter:drop-shadow(0 3px 6px rgba(0,0,0,.25))}
+#bub{background:#fff;border:2px solid #fbbf24;border-radius:16px 16px 16px 4px;padding:6px 11px;font:700 13px/1.35 'Segoe UI',system-ui,sans-serif;color:#78350f;max-width:58vw;margin-bottom:32px;opacity:0;transform:scale(.9) translateY(6px);transition:opacity .25s,transform .25s;box-shadow:0 4px 14px rgba(0,0,0,.15)}
+#bub.on{opacity:1;transform:none}
+.err{background:#fff;border-radius:20px;padding:20px;font-weight:700;line-height:1.5;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a href="gyakorlas.html" id="back">⬅ Főoldal</a><h1 id="ttl">Tanuló kártyák</h1></div>
+  <div id="main" style="display:none">
+    <div class="prog"><div class="bar"><i id="pbar"></i></div><span class="cnt" id="pcnt"></span></div>
+    <div class="scene"><div class="card3d" id="c">
+      <div class="face front"><div class="lbl" id="fl"></div><div class="txt" id="ft"></div><div class="hint">👆 Koppints a kártyára, és fordítsd meg!</div></div>
+      <div class="face back"><div class="lbl">Megoldás</div><div class="txt" id="bt"></div><div class="sub" id="bs"></div><button class="spk" id="spk" style="display:none">🔊 Hallgasd meg</button></div>
+    </div></div>
+    <div class="btns" id="btns"><button class="btn again" id="bAgain">🔁 Még gyakorolom</button><button class="btn know" id="bKnow">✅ Tudom!</button></div>
+  </div>
+  <div class="done" id="done"></div>
+  <div class="err" id="err" style="display:none"></div>
+</div>
+<div id="mascot"><span id="lionSlot"></span><div id="bub"></div></div>
+<script src="kozos.js"></script>
+<script>
+(function(){
+var id=(new URLSearchParams(location.search).get('f')||'');
+var $=function(x){return document.getElementById(x);};
+var deck=[],queue=[],known=0,total=0,isEn=false,cur=null,bt;
+function say(t,ms){var b=$('bub');b.textContent=t;b.classList.add('on');clearTimeout(bt);bt=setTimeout(function(){b.classList.remove('on');},ms||2200);}
+function fail(msg){$('main').style.display='none';var e=$('err');e.style.display='block';e.innerHTML=msg;}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+/* a kvíz fájljából kiolvassuk az adatokat */
+function extract(txt,name){
+  var i=txt.indexOf('const '+name+'='); if(i<0)return null;
+  var s=txt.indexOf('=',i)+1; while(/\s/.test(txt.charAt(s)))s++;
+  var open=txt.charAt(s),close=open==='['?']':'}',d=0,inS=false,esc=false,q='';
+  for(var k=s;k<txt.length;k++){
+    var c=txt.charAt(k);
+    if(inS){ if(esc)esc=false; else if(c==='\\')esc=true; else if(c===q)inS=false; }
+    else{ if(c==='"'||c==="'"){inS=true;q=c;} else if(c===open)d++; else if(c===close){d--; if(d===0)return (0,eval)('('+txt.slice(s,k+1)+')');} }
+  }
+  return null;
+}
+function fromWords(W){
+  return W.map(function(w){
+    var en=w.en||[],sp=en[0]||'';
+    if(/\+\s*\?$/.test(w.hu||'')&&en[1])sp=en[1];
+    var back=en.slice(0,3).join('  /  ');
+    return {l:(w.deco||'Magyarul'),f:w.hu,b:back,s:w.note||'',sp:sp};
+  });
+}
+function fromQuestions(Q){
+  var c=[];
+  Q.forEach(function(q){
+    if(q.img)return; var t=q.type;
+    if(t==='concept')c.push({l:'Melyik fogalom?',f:q.q,b:q.answers[0],s:q.expl||''});
+    else if(t==='fill')c.push({l:'Egészítsd ki!',f:q.q.replace('___','_____'),b:q.answers[0],s:q.expl||''});
+    else if(t==='match')q.pairs.forEach(function(p){c.push({l:q.q,f:p[0],b:p[1],s:''});});
+    else if(t==='mc')c.push({l:'Kérdés',f:q.q,b:q.options[q.answer],s:q.expl||''});
+    else if(t==='tf')c.push({l:'Igaz vagy hamis?',f:q.q,b:q.answer?'✅ IGAZ':'❌ HAMIS',s:q.expl||''});
+    else if(t==='multi')c.push({l:'Több jó válasz is van',f:q.q,b:q.answers.map(function(i){return q.options[i];}).join('  •  '),s:q.expl||''});
+  });
+  return c;
+}
+function setText(el,t){el.textContent=t;el.className='txt'+(t.length>46?' long':'');}
+function show(){
+  cur=deck[queue[0]]; var c=$('c');
+  c.classList.remove('flip'); $('btns').classList.remove('on');
+  $('fl').textContent=cur.l; setText($('ft'),cur.f); setText($('bt'),cur.b); $('bs').textContent=cur.s||'';
+  $('spk').style.display=(isEn&&KZ.canSpeak()&&cur.sp)?'inline-block':'none';
+  $('pbar').style.width=(known/total*100)+'%'; $('pcnt').textContent=known+' / '+total+' megvan';
+}
+function flip(){
+  var c=$('c'); c.classList.toggle('flip');
+  if(c.classList.contains('flip')){ $('btns').classList.add('on'); if(isEn&&cur.sp)KZ.speak(cur.sp); }
+}
+function finish(){
+  var r=KZ.completeDeck(id); $('main').style.display='none';
+  var h=KZ.lionHTML('kz-xl')+'<h2>Mind megvan! 🎉</h2>';
+  h+=r.pts?'<div class="pts">+'+r.pts+' pont</div>':'<div class="line">Ezt a paklit ma már teljesítetted, ezért most nem jár új pont. Holnap újra! 😉</div>';
+  h+='<div class="line">🔥 '+r.streak+' napos sorozat · ⭐ '+r.points+' pont összesen</div>';
+  if(r.levelUp)h+='<div class="new">🦁 Új szint: '+KZ.esc(r.level.name)+'!</div>';
+  r.newBadges.forEach(function(b){h+='<div class="new">🏅 Új jelvény: '+b.e+' '+KZ.esc(b.n)+'</div>';});
+  h+='<div class="acts"><button class="a1" id="rep">🔁 Újra a pakli</button><a class="a2" href="jatek.html?f='+id+'">📝 Most jöhet a kvíz!</a><a class="a3" href="gyakorlas.html">🏠 Főoldal</a></div>';
+  var d=$('done'); d.innerHTML=h; d.classList.add('on'); $('rep').onclick=start; KZ.react(d.querySelector('.kz-l'),r.levelUp?'spin':'cheer'); KZ.react(document.querySelector('#mascot .kz-l'),'hop'); say('Szuper munka! 🦁',4000);
+}
+function start(){
+  $('done').classList.remove('on'); $('main').style.display='block';
+  var order=shuffle(deck.map(function(_,i){return i;})); queue=order; known=0; total=deck.length; show();
+}
+$('c').addEventListener('click',flip);
+$('spk').addEventListener('click',function(e){e.stopPropagation();KZ.speak(cur.sp);});
+$('bKnow').addEventListener('click',function(){known++;queue.shift();say(KZ.rnd(KZ.okMsgs),1600);KZ.react(document.querySelector('#mascot .kz-l'),'hop');if(!queue.length){finish();}else show();});
+$('bAgain').addEventListener('click',function(){queue.push(queue.shift());say('Semmi baj, még visszajön! 💪',1600);KZ.react(document.querySelector('#mascot .kz-l'),'shake');show();});
+
+if(!/^[a-z0-9_]+$/.test(id)){fail('Hibás hivatkozás. <br><br><a href="gyakorlas.html">⬅ Vissza a főoldalra</a>');return;}
+var m=/^(tortenelem|kornyezet|irodalom|matek|enek|nyelvtan|angol)_/.exec(id); $('back').href='gyakorlas.html#'+(m?m[1]:'angol');
+KZ.injectCSS(); $('lionSlot').innerHTML=KZ.lionHTML('kz-s');
+fetch(id+'.html').then(function(r){if(!r.ok)throw new Error('404');return r.text();}).then(function(txt){
+  var doc=new DOMParser().parseFromString(txt,'text/html'),W=extract(txt,'WORDS'),Q=extract(txt,'QUESTIONS'),title='';
+  if(W){isEn=true;deck=fromWords(W);var sp=doc.querySelector('.top-bar span');title=sp?sp.textContent.replace(/·.*$/,'').trim():id;}
+  else if(Q){deck=fromQuestions(Q);var ht=doc.querySelector('.hero-title');title=ht?ht.textContent.trim():id;}
+  if(!deck.length){fail('Ehhez a feladatsorhoz nem készíthető kártya.<br><br><a href="jatek.html?f='+id+'">📝 Inkább a kvíz</a>');return;}
+  $('ttl').textContent='🃏 '+title; document.title='Kártyák – '+title; start(); say('Fordítsd meg a kártyát! 🦁',3000);
+}).catch(function(e){if(e&&e.message==='404')fail('Ez a feladatsor nem található. Ellenőrizd, hogy a fájl fel van-e töltve a GitHub-ra.<br><br><a href="gyakorlas.html">⬅ Vissza a főoldalra</a>');else fail('A kártyák betöltéséhez internetkapcsolat és a feltöltött oldal szükséges.<br><br><a href="gyakorlas.html">⬅ Vissza a főoldalra</a>');});
+})();
+</script>
+</body>
+</html>

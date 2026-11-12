@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kvíz</title>
+<style>
+html,body{margin:0;height:100%;background:#f3e8ff;overflow:hidden}
+iframe{position:fixed;inset:0;width:100%;height:100%;border:0;background:#f3e8ff}
+#kzMascot{position:fixed;left:6px;bottom:6px;z-index:20;display:flex;align-items:flex-end;gap:4px;pointer-events:none}
+#kzMascot .kz-l{opacity:.97;filter:drop-shadow(0 3px 6px rgba(0,0,0,.25))}
+#kzBubble{background:#fff;border:2px solid #fbbf24;border-radius:16px 16px 16px 4px;padding:6px 11px;font:700 13px/1.35 'Segoe UI',system-ui,sans-serif;color:#78350f;
+  max-width:58vw;margin-bottom:34px;opacity:0;transform:scale(.9) translateY(6px);transition:opacity .25s,transform .25s;box-shadow:0 4px 14px rgba(0,0,0,.15)}
+#kzBubble.on{opacity:1;transform:none}
+</style>
+</head>
+<body>
+<iframe id="kzFrame" title="Kvíz"></iframe>
+<div id="kzMascot"><span id="kzLion"></span><div id="kzBubble"></div></div>
+<script src="kozos.js"></script>
+<script>if (window.KZ) { KZ.initPlay(); }</script>
+</body>
+</html>
