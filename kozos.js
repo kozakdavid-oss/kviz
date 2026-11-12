@@ -1,7 +1,8 @@
-/* kozos.js – Leó, a tanuló oroszlán: pontok, napi sorozat, jelvények, szintek, felolvasás */
+/* kozos.js – Kisori, a tanuló oroszlán: pontok, napi sorozat, jelvények, szintek, felolvasás */
 (function () {
 'use strict';
-var KEY = 'kviz_adatok_v1', NAME = 'Leó', IMG = 'kabala.png';
+var KEY = 'kviz_adatok_v1', NAME = 'Kisori', IMG = 'kisori.png';
+var CAP_FROM = 30, CAP = 20;   // 30 kérdésnél hosszabb feladatsorból egy körben csak CAP kérdés jön
 
 var LEVELS = [
   { n: 'Oroszlánkölyök', min: 0 }, { n: 'Kis tanonc', min: 100 }, { n: 'Okos oroszlán', min: 300 },
@@ -93,9 +94,10 @@ function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;');
 
 /* ---------- stílus (főoldal + játékoldali keret) ---------- */
 var LIONCSS = '.kz-l{display:inline-block;position:relative;line-height:0;transform-origin:50% 100%}' +
-  '.kz-b{display:block;position:relative;transform-origin:50% 100%;animation:kz-breathe 3.4s ease-in-out infinite}' +
-  '.kz-l img{display:block;height:auto;max-width:none}.kz-s img{width:72px}.kz-m img{width:118px}.kz-lg img{width:130px}.kz-xl img{width:150px}' +
-  '.kz-eye{position:absolute;background:#f3ebe1;border-radius:50%;transform:scaleY(0);transform-origin:50% 0;animation:kz-blink 4.6s infinite}' +
+  '.kz-bd{display:block;position:relative;transform-origin:50% 100%;animation:kz-breathe 3.4s ease-in-out infinite}' +
+  '.kz-l img{display:block;height:auto;max-width:none}.kz-s{font-size:78px}.kz-m{font-size:122px}.kz-lg{font-size:136px}.kz-xl{font-size:156px}.kz-s img{width:78px}.kz-m img{width:122px}.kz-lg img{width:136px}.kz-xl img{width:156px}' +
+  '.kz-nopic img,.kz-nopic .kz-eye{display:none}.kz-nopic:before{content:"🦁";display:block;line-height:1.1;font-size:54px;text-align:center}.kz-s .kz-nopic:before{font-size:40px}.kz-lg .kz-nopic:before,.kz-xl .kz-nopic:before{font-size:84px}' +
+  '.kz-eye{position:absolute;background:#dec638;border-bottom:.014em solid rgba(120,95,10,.8);border-radius:50%;transform:scaleY(0);transform-origin:50% 0;animation:kz-blink 4.6s infinite}' +
   '@keyframes kz-breathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.012,1.03)}}' +
   '@keyframes kz-blink{0%,90%,100%{transform:scaleY(0)}93%,96%{transform:scaleY(1)}}' +
   '@keyframes kz-hop{0%{transform:translateY(0) scale(1,1)}18%{transform:translateY(0) scale(1.1,.88)}42%{transform:translateY(-26%) scale(.94,1.1)}68%{transform:translateY(0) scale(1.08,.92)}84%{transform:translateY(-8%) scale(.98,1.03)}100%{transform:translateY(0) scale(1,1)}}' +
@@ -108,7 +110,7 @@ var LIONCSS = '.kz-l{display:inline-block;position:relative;line-height:0;transf
   '.kz-spin{animation:kz-spin 1.1s ease-in-out}' +
   '.kz-sp{position:absolute;bottom:45%;font-size:18px;line-height:1;pointer-events:none;opacity:0;animation:kz-sp 1.4s ease-out forwards}' +
   '@keyframes kz-sp{0%{opacity:0;transform:translate(0,0) scale(.5)}20%{opacity:1}100%{opacity:0;transform:translate(var(--dx),-90px) scale(1.2)}}' +
-  '@media (prefers-reduced-motion:reduce){.kz-b,.kz-eye{animation:none}.kz-l{animation:none!important}.kz-sp{display:none}}';
+  '@media (prefers-reduced-motion:reduce){.kz-bd,.kz-eye{animation:none}.kz-l{animation:none!important}.kz-sp{display:none}}';
 function css() {
   return '.kz-dash{width:100%;max-width:520px;margin:0 auto 1.6rem;background:#fff;border-radius:24px;padding:14px 14px 12px;box-shadow:0 8px 30px rgba(60,40,120,.14);font-family:inherit;box-sizing:border-box}' +
   '.kz-top{display:flex;align-items:center;gap:10px}.kz-top .kz-l{flex-shrink:0}' +
@@ -136,12 +138,12 @@ function injectCSS(doc) {
 }
 
 
-/* ---------- Leó: megjelenítés és mozgás ---------- */
-var EYES = '<i class="kz-eye" style="left:15.74%;top:26.13%;width:4.46%;height:5.64%"></i><i class="kz-eye r" style="left:31.06%;top:24.44%;width:4.46%;height:5.64%"></i>';
+/* ---------- Kisori: megjelenítés és mozgás ---------- */
+var EYES = '<i class="kz-eye" style="left:46.70%;top:30.18%;width:5.09%;height:5.79%"></i><i class="kz-eye r" style="left:49.96%;top:29.15%;width:5.09%;height:5.27%"></i>';
 var BOOP = ['Hihi, csiklandozol! 😄', 'Gyerünk, gyakoroljunk! 🦁', 'Ugye milyen puha vagyok? 🧸', 'Rrrr! Készen állok! 💪', 'Válassz egy tantárgyat! 📚'];
 function lionHTML(cls) {
   var dl = '-' + (Math.random() * 4).toFixed(2) + 's';
-  return '<span class="kz-l ' + (cls || 'kz-m') + '"><span class="kz-b"><img src="' + IMG + '" alt="' + NAME + '">' + EYES.replace(/<i /g, '<i style="animation-delay:' + dl + '" data-x="1" ').replace(/style="animation-delay:([^"]*)" data-x="1" class="([^"]*)" style="([^"]*)"/g, 'class="$2" style="animation-delay:$1;$3"') + '</span></span>';
+  return '<span class="kz-l ' + (cls || 'kz-m') + '"><span class="kz-bd"><img src="' + IMG + '" alt="" onerror="this.parentNode.className+=\' kz-nopic\'">' + EYES.replace(/<i /g, '<i style="animation-delay:' + dl + '" data-x="1" ').replace(/style="animation-delay:([^"]*)" data-x="1" class="([^"]*)" style="([^"]*)"/g, 'class="$2" style="animation-delay:$1;$3"') + '</span></span>';
 }
 function sparkle(el) {
   var d = el.ownerDocument, em = ['✨', '⭐', '🌟', '💫'], i;
@@ -274,6 +276,21 @@ function hook(fr, id, say, mreact) {
     mreact(res.levelUp ? 'spin' : 'cheer');
     say(res.levelUp ? 'Szintet léptél! 🦁🎉' : (res.pct >= 80 ? 'Szuper eredmény! 🌟' : 'Ügyes voltál! 💪'), 4000);
   }
+
+  /* hosszú feladatsor: egy körben csak CAP kérdés jön, minden körben mások */
+  try {
+    if (w.eval("typeof QUESTIONS!=='undefined'&&typeof start==='function'")) {
+      var os = w.start;
+      w.start = function () {
+        var r = os.apply(this, arguments);
+        try {
+          var n = w.eval('QUESTIONS.length');
+          if (n > CAP_FROM) { w.eval('order.length=' + CAP + ';render();'); say('Most ' + CAP + ' kérdés jön a(z) ' + n + '-ből, minden körben mások! 🦁', 4200); }
+        } catch (e) {}
+        return r;
+      };
+    }
+  } catch (e) {}
   ['showResult', 'finish'].forEach(function (n) {
     var o = w[n]; if (typeof o !== 'function') return;
     w[n] = function () { var r = o.apply(this, arguments); try { onResult(); } catch (e) {} return r; };
@@ -293,6 +310,7 @@ function initPlay() {
 }
 
 window.KZ = {
+  CAP_FROM: CAP_FROM, CAP: CAP,
   lionHTML: lionHTML, react: react_,
   NAME: NAME, IMG: IMG, load: load, save: save, today: today, level: level, badges: BADGES, curStreak: curStreak,
   completeQuiz: completeQuiz, completeDeck: completeDeck, speak: speak, canSpeak: canSpeak,

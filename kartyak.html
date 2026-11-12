@@ -72,7 +72,7 @@ body{background:linear-gradient(135deg,#fef3c7 0%,#ffe4e6 50%,#ede9fe 100%);min-
 (function(){
 var id=(new URLSearchParams(location.search).get('f')||'');
 var $=function(x){return document.getElementById(x);};
-var deck=[],queue=[],known=0,total=0,isEn=false,cur=null,bt;
+var deck=[],queue=[],known=0,total=0,isEn=false,cur=null,bt,capMsg='';
 function say(t,ms){var b=$('bub');b.textContent=t;b.classList.add('on');clearTimeout(bt);bt=setTimeout(function(){b.classList.remove('on');},ms||2200);}
 function fail(msg){$('main').style.display='none';var e=$('err');e.style.display='block';e.innerHTML=msg;}
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
@@ -130,11 +130,13 @@ function finish(){
   if(r.levelUp)h+='<div class="new">🦁 Új szint: '+KZ.esc(r.level.name)+'!</div>';
   r.newBadges.forEach(function(b){h+='<div class="new">🏅 Új jelvény: '+b.e+' '+KZ.esc(b.n)+'</div>';});
   h+='<div class="acts"><button class="a1" id="rep">🔁 Újra a pakli</button><a class="a2" href="jatek.html?f='+id+'">📝 Most jöhet a kvíz!</a><a class="a3" href="gyakorlas.html">🏠 Főoldal</a></div>';
-  var d=$('done'); d.innerHTML=h; d.classList.add('on'); $('rep').onclick=start; KZ.react(d.querySelector('.kz-l'),r.levelUp?'spin':'cheer'); KZ.react(document.querySelector('#mascot .kz-l'),'hop'); say('Szuper munka! 🦁',4000);
+  var d=$('done'); d.innerHTML=h; d.classList.add('on'); $('rep').onclick=function(){start();if(capMsg)say(capMsg,4200);}; KZ.react(d.querySelector('.kz-l'),r.levelUp?'spin':'cheer'); KZ.react(document.querySelector('#mascot .kz-l'),'hop'); say('Szuper munka! 🦁',4000);
 }
 function start(){
   $('done').classList.remove('on'); $('main').style.display='block';
-  var order=shuffle(deck.map(function(_,i){return i;})); queue=order; known=0; total=deck.length; show();
+  var order=shuffle(deck.map(function(_,i){return i;})); capMsg='';
+  if(order.length>KZ.CAP_FROM){order=order.slice(0,KZ.CAP);capMsg='Most '+KZ.CAP+' kártya jön a(z) '+deck.length+'-ből, minden körben mások! 🦁';}
+  queue=order; known=0; total=order.length; show();
 }
 $('c').addEventListener('click',flip);
 $('spk').addEventListener('click',function(e){e.stopPropagation();KZ.speak(cur.sp);});
@@ -149,7 +151,7 @@ fetch(id+'.html').then(function(r){if(!r.ok)throw new Error('404');return r.text
   if(W){isEn=true;deck=fromWords(W);var sp=doc.querySelector('.top-bar span');title=sp?sp.textContent.replace(/·.*$/,'').trim():id;}
   else if(Q){deck=fromQuestions(Q);var ht=doc.querySelector('.hero-title');title=ht?ht.textContent.trim():id;}
   if(!deck.length){fail('Ehhez a feladatsorhoz nem készíthető kártya.<br><br><a href="jatek.html?f='+id+'">📝 Inkább a kvíz</a>');return;}
-  $('ttl').textContent='🃏 '+title; document.title='Kártyák – '+title; start(); say('Fordítsd meg a kártyát! 🦁',3000);
+  $('ttl').textContent='🃏 '+title; document.title='Kártyák – '+title; start(); say(capMsg||'Fordítsd meg a kártyát! 🦁',capMsg?4200:3000);
 }).catch(function(e){if(e&&e.message==='404')fail('Ez a feladatsor nem található. Ellenőrizd, hogy a fájl fel van-e töltve a GitHub-ra.<br><br><a href="gyakorlas.html">⬅ Vissza a főoldalra</a>');else fail('A kártyák betöltéséhez internetkapcsolat és a feltöltött oldal szükséges.<br><br><a href="gyakorlas.html">⬅ Vissza a főoldalra</a>');});
 })();
 </script>
